@@ -99,6 +99,14 @@
               </a>
             </li>
           <% end %>
+            <% if can_view_btc_timestamps(@project) then %>
+                <li id="reports-nav-tab" class="<%= "active" if is_project_btc_timestamps? %>">
+                  <a href="<%= project_btc_timestamps_url(@project) %>" title="<%=t "nav2.projects.timestamps" %>">
+                    <span class="hidden-sm hidden-md"><%=t "nav2.projects.timestamps" %></span>
+                    <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
+                  </a>
+                </li>
+            <% end %>
           <% if can_view_project_archive(@project) then %>
             <li id="project-archive-nav-tab" class="<%= "active" if is_project_archive? %>">
               <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">

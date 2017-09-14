@@ -1,0 +1,80 @@
+<% provide(:head_title, t("projects.btc_timestamps.index.head_title", project: h(@project.name)).html_safe) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<div>
+  <%= link_to image_tag('originStamp_logo.png', width: 70, height: 70), "https://app.originstamp.org/home", target: "_blank" %> <strong><%=t "projects.btc_timestamps.index.originstamp_information" %></strong>
+  <br>
+  <br>
+  <br>
+  <p>To create a timestamp with OriginStamp please create a report and click 'Save and timestamp'.</p>
+</div>
+
+<div id="content">
+  <div>
+      <% if can_delete_btc_timestamps(@project) %>
+        <%= link_to "", remote: true, class: "btn btn-default", id: "delete-reports-btn" do %>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <span class="hidden-xs"><%=t "projects.btc_timestamps.index.modal_delete.delete" %></span>
+        <% end %>
+      <% end %>
+  </div>
+
+  <table class="table timestamp-table" data-project-id="<%= @project.id %>">
+    <thead>
+      <tr>
+        <th><input type="checkbox" class="check-all-reports"></th>
+        <th><%=t "projects.btc_timestamps.index.sha256" %></th>
+        <th><%=t "projects.btc_timestamps.index.timestamp_created_at" %></th>
+        <th><%=t "projects.btc_timestamps.index.timestamp_created_by" %></th>
+        <th><%=t "projects.btc_timestamps.index.download_pdf" %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @project.btc_timestamps.count > 0 %>
+        <% @project.btc_timestamps.order('created_at DESC').each do |btc| %>
+          <tr
+            class="report-row"
+            data-id="<%= btc.id %>"
+            >
+            <th><input type="checkbox" class="check-report"></th>
+            <td><nobr><a href="https://app.originstamp.org/s/<%= btc.sha256 %>" target="_blank"><%= btc.sha256 %></a></nobr></td>
+            <td><%=l btc.created_at, format: :full %></td>
+            <td><%= btc.user.full_name %></td>
+            <td><a href="<%= project_btc_timestamps_path(@project) + '/' + btc.file_uuid + '/download' %>">
+              <span class="glyphicon glyphicon-download-alt"></span>
+            </a></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr><td colspan="5"><%=t "projects.btc_timestamps.index.no_timestamps" %></td></tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Save report modal -->
+<div class="modal" id="delete-reports-modal" tabindex="-1" role="dialog" aria-labelledby="delete-reports-modal-label">
+  <%= bootstrap_form_tag url: destroy_project_btc_timestamps_path(@project), method: :post, id: "delete-reports-form" do |f| %>
+    <input type="hidden" name="report_ids" id="report-ids">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="delete-reports-modal-label"><%=t "projects.btc_timestamps.index.modal_delete.delete" %></h4>
+        </div>
+        <div class="modal-body">
+          <%=t "projects.btc_timestamps.index.modal_delete.message" %>
+        </div>
+        <div class="modal-footer">
+          <%= f.button t("projects.btc_timestamps.index.modal_delete.delete"), class: "btn btn-primary", id: "confirm-delete-reports-btn", name: nil %>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+<%= javascript_include_tag("reports/index") %>

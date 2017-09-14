@@ -60,7 +60,9 @@ class Activity < ActiveRecord::Base
     :complete_task,
     :uncomplete_task,
     :assign_repository_record,
-    :unassign_repository_record
+    :unassign_repository_record,
+    :create_btc_timestamp,
+    :delete_btc_timestamp
   ]
 
   validates :type_of, presence: true

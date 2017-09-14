@@ -181,6 +181,13 @@ Rails.application.routes.draw do
       # as well as all activities page for single project (HTML)
       resources :project_activities, path: '/activities', only: [:index]
       resources :tags, only: [:create, :update, :destroy]
+      # Timestamps via Bitcoin Blockchain
+      resources :btc_timestamps, path: '/btc_timestamps', only: [:index] do
+        collection do
+          get '/:uuid/download' => 'btc_timestamps#download'
+          post 'destroy', as: :destroy # Destroy multiple selected timestamps
+        end
+      end
       resources :reports,
                 path: '/reports',
                 only: [:index, :new, :create, :edit, :update] do
@@ -188,6 +195,7 @@ Rails.application.routes.draw do
           # The posts following here should in theory be gets,
           # but are posts because of parameters payload
           post 'generate', to: 'reports#generate'
+          post 'btc_timestamp', to: 'reports#btc_timestamp'
           get 'new/', to: 'reports#new'
           get 'new/project_contents_modal',
               to: 'reports#project_contents_modal',

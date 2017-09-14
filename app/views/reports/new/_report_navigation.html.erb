@@ -36,17 +36,31 @@
         </div>
 
         <%= link_to "", class: "btn btn-primary", remote: true, id: "print-report" do %>
-          <span class="glyphicon glyphicon-print"></span>
-          <span class="hidden-xs"><%=t "projects.reports.new.nav_print" %></span>
+            <span class="glyphicon glyphicon-print"></span>
+            <span class="hidden-xs"><%= t "projects.reports.new.nav_print" %></span>
         <% end %>
+
         <%= form_tag generate_project_reports_path(@project, format: :pdf), method: :post, target: "_blank", class: "get-report-pdf-form" do %>
-          <div class="form-group">
-          <%= hidden_field_tag "html", "" %>
-          <%= link_to "", class: "btn btn-primary", remote: true, id: "get-report-pdf" do %>
-            <span class="glyphicon glyphicon-save-file"></span>
-            <span class="hidden-xs"><%=t "projects.reports.new.nav_pdf" %></span>
-          <% end %>
-          </div>
+            <div class="form-group">
+              <%= hidden_field_tag "html", "" %>
+              <%= link_to "", class: "btn btn-primary", remote: true, id: "get-report-pdf" do %>
+                  <span class="glyphicon glyphicon-save-file"></span>
+                  <span class="hidden-xs"><%= t "projects.reports.new.nav_pdf" %></span>
+              <% end %>
+            </div>
+        <% end %>
+
+        <%= form_tag btc_timestamp_project_reports_path(@project), method: :post, class: "save-and-create-btc-timestamp-form" do %>
+            <div class="form-group">
+              <!--Send projetc ID and user ID-->
+              <%= hidden_field :project_id, @project.id %>
+               <!--                          -->
+              <%= hidden_field_tag "html", "" %>
+              <%= link_to "", class: "btn btn-primary", remote: true, id: "get-btc-timestamp-pdf" do %>
+                  <span class="glyphicon glyphicon-envelope"></span>
+                  <span class="hidden-xs"><%= t "projects.btc_timestamps.index.new" %></span>
+              <% end %>
+            </div>
         <% end %>
 
         <%= link_to "", class: "btn btn-primary", remote: true, id: "save-report-link" do %>
@@ -54,7 +68,7 @@
           <span class="hidden-xs"><%=t "projects.reports.new.nav_save" %></span>
         <% end %>
 
-        <%= link_to project_reports_path(@project), id: "cancel-report-link", class: "btn btn-default" do %>
+        <%= link_to project_reports_path(@project), method: :get, id: "cancel-report-link", class: "btn btn-default" do %>
           <span class="glyphicon glyphicon-remove"></span>
           <span class="hidden-xs"><%=t "projects.reports.new.nav_close" %></span>
         <% end %>

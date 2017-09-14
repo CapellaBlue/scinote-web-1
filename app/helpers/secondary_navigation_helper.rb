@@ -55,4 +55,8 @@ module SecondaryNavigationHelper
   def is_module_archive?
     action_name == 'archive'
   end
+
+  def is_project_btc_timestamps?
+    action_name == 'btc_timestamps'
+  end
 end

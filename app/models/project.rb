@@ -24,6 +24,7 @@ class Project < ActiveRecord::Base
   has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
+  has_many :btc_timestamps, inverse_of: :project, dependent: :destroy
   belongs_to :team, inverse_of: :projects
 
   def self.search(

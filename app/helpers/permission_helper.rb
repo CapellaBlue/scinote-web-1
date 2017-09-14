@@ -8,12 +8,12 @@ module PermissionHelper
   aspector do
     # ---- TEAM ROLES DEFINITIONS ----
     around [
-      :is_member_of_team,
-      :is_admin_of_team,
-      :is_normal_user_of_team,
-      :is_normal_user_or_admin_of_team,
-      :is_guest_of_team
-    ] do |proxy, *args, &block|
+               :is_member_of_team,
+               :is_admin_of_team,
+               :is_normal_user_of_team,
+               :is_normal_user_or_admin_of_team,
+               :is_guest_of_team
+           ] do |proxy, *args, &block|
       if args[0]
         @user_team = current_user.user_teams.where(team: args[0]).take
         @user_team ? proxy.call(*args, &block) : false
@@ -24,14 +24,14 @@ module PermissionHelper
 
     # ---- PROJECT ROLES DEFINITIONS ----
     around [
-      :is_member_of_project,
-      :is_owner_of_project,
-      :is_user_of_project,
-      :is_user_or_higher_of_project,
-      :is_technician_of_project,
-      :is_technician_or_higher_of_project,
-      :is_viewer_of_project
-    ] do |proxy, *args, &block|
+               :is_member_of_project,
+               :is_owner_of_project,
+               :is_user_of_project,
+               :is_user_or_higher_of_project,
+               :is_technician_of_project,
+               :is_technician_or_higher_of_project,
+               :is_viewer_of_project
+           ] do |proxy, *args, &block|
       if args[0]
         @user_project = current_user.user_projects.where(project: args[0]).take
         @user_project ? proxy.call(*args, &block) : false
@@ -42,36 +42,36 @@ module PermissionHelper
 
     # ---- Almost everything is disabled for archived projects ----
     around [
-      :can_view_project,
-      :can_view_project_activities,
-      :can_view_project_users,
-      :can_view_project_notifications,
-      :can_view_project_comments,
-      :can_edit_project,
-      :can_archive_project,
-      :can_add_user_to_project,
-      :can_remove_user_from_project,
-      :can_edit_users_on_project,
-      :can_add_comment_to_project,
-      :can_restore_archived_modules,
-      :can_view_project_samples,
-      :can_view_project_archive,
-      :can_create_new_tag,
-      :can_edit_tag,
-      :can_delete_tag,
-      :can_edit_canvas,
-      :can_reposition_modules,
-      :can_edit_connections,
-      :can_create_modules,
-      :can_edit_modules,
-      :can_edit_module_groups,
-      :can_clone_modules,
-      :can_archive_modules,
-      :can_view_reports,
-      :can_create_new_report,
-      :can_delete_reports,
-      :can_create_experiment
-    ] do |proxy, *args, &block|
+               :can_view_project,
+               :can_view_project_activities,
+               :can_view_project_users,
+               :can_view_project_notifications,
+               :can_view_project_comments,
+               :can_edit_project,
+               :can_archive_project,
+               :can_add_user_to_project,
+               :can_remove_user_from_project,
+               :can_edit_users_on_project,
+               :can_add_comment_to_project,
+               :can_restore_archived_modules,
+               :can_view_project_samples,
+               :can_view_project_archive,
+               :can_create_new_tag,
+               :can_edit_tag,
+               :can_delete_tag,
+               :can_edit_canvas,
+               :can_reposition_modules,
+               :can_edit_connections,
+               :can_create_modules,
+               :can_edit_modules,
+               :can_edit_module_groups,
+               :can_clone_modules,
+               :can_archive_modules,
+               :can_view_reports,
+               :can_create_new_report,
+               :can_delete_reports,
+               :can_create_experiment
+           ] do |proxy, *args, &block|
       if args[0]
         project = args[0]
         project.active? ? proxy.call(*args, &block) : false
@@ -82,50 +82,50 @@ module PermissionHelper
 
     # ---- Almost everything is disabled for archived modules ----
     around [
-      :can_view_module,
-      # TODO: Because module restoring is made via updating module attributes,
-      # (and that action checks if module is editable) this needs to be
-      # commented out or that functionality will not work any more.
-      #:can_edit_module,
-      :can_archive_module,
-      :can_edit_tags_for_module,
-      :can_add_tag_to_module,
-      :can_remove_tag_from_module,
-      :can_view_module_info,
-      :can_view_module_users,
-      :can_edit_users_on_module,
-      :can_add_user_to_module,
-      :can_remove_user_from_module,
-      :can_view_module_protocols,
-      :can_load_protocol_into_module,
-      :can_export_protocol_from_module,
-      :can_copy_protocol_to_repository,
-      :can_view_module_activities,
-      :can_view_module_comments,
-      :can_add_comment_to_module,
-      :can_view_module_samples,
-      :can_view_module_archive,
-      :can_view_results_in_module,
-      :can_view_or_download_result_assets,
-      :can_view_result_comments,
-      :can_add_result_comment_in_module,
-      :can_create_result_text_in_module,
-      :can_edit_result_text_in_module,
-      :can_archive_result_text_in_module,
-      :can_create_result_table_in_module,
-      :can_edit_result_table_in_module,
-      :can_archive_result_table_in_module,
-      :can_create_result_asset_in_module,
-      :can_edit_result_asset_in_module,
-      :can_archive_result_asset_in_module,
-      :can_add_samples_to_module,
-      :can_delete_samples_from_module
-    ] do |proxy, *args, &block|
+               :can_view_module,
+               # TODO: Because module restoring is made via updating module attributes,
+               # (and that action checks if module is editable) this needs to be
+               # commented out or that functionality will not work any more.
+               #:can_edit_module,
+               :can_archive_module,
+               :can_edit_tags_for_module,
+               :can_add_tag_to_module,
+               :can_remove_tag_from_module,
+               :can_view_module_info,
+               :can_view_module_users,
+               :can_edit_users_on_module,
+               :can_add_user_to_module,
+               :can_remove_user_from_module,
+               :can_view_module_protocols,
+               :can_load_protocol_into_module,
+               :can_export_protocol_from_module,
+               :can_copy_protocol_to_repository,
+               :can_view_module_activities,
+               :can_view_module_comments,
+               :can_add_comment_to_module,
+               :can_view_module_samples,
+               :can_view_module_archive,
+               :can_view_results_in_module,
+               :can_view_or_download_result_assets,
+               :can_view_result_comments,
+               :can_add_result_comment_in_module,
+               :can_create_result_text_in_module,
+               :can_edit_result_text_in_module,
+               :can_archive_result_text_in_module,
+               :can_create_result_table_in_module,
+               :can_edit_result_table_in_module,
+               :can_archive_result_table_in_module,
+               :can_create_result_asset_in_module,
+               :can_edit_result_asset_in_module,
+               :can_archive_result_asset_in_module,
+               :can_add_samples_to_module,
+               :can_delete_samples_from_module
+           ] do |proxy, *args, &block|
       if args[0]
         my_module = args[0]
         if my_module.active? &&
-           my_module.experiment.active? &&
-           my_module.experiment.project.active?
+            my_module.experiment.active? &&
+            my_module.experiment.project.active?
           proxy.call(*args, &block)
         else
           false
@@ -137,26 +137,26 @@ module PermissionHelper
 
     # ---- Some things are disabled for archived experiment ----
     around [
-      :can_edit_experiment,
-      :can_view_experiment,
-      :can_view_experiment_archive,
-      :can_archive_experiment,
-      :can_view_experiment_samples,
-      :can_clone_experiment,
-      :can_move_experiment,
-      :can_edit_canvas,
-      :can_reposition_modules,
-      :can_edit_connections,
-      :can_create_modules,
-      :can_edit_modules,
-      :can_edit_module_groups,
-      :can_clone_modules,
-      :can_archive_modules
-    ] do |proxy, *args, &block|
+               :can_edit_experiment,
+               :can_view_experiment,
+               :can_view_experiment_archive,
+               :can_archive_experiment,
+               :can_view_experiment_samples,
+               :can_clone_experiment,
+               :can_move_experiment,
+               :can_edit_canvas,
+               :can_reposition_modules,
+               :can_edit_connections,
+               :can_create_modules,
+               :can_edit_modules,
+               :can_edit_module_groups,
+               :can_clone_modules,
+               :can_archive_modules
+           ] do |proxy, *args, &block|
       if args[0]
         experiment = args[0]
         if experiment.active? &&
-           experiment.project.active?
+            experiment.project.active?
           proxy.call(*args, &block)
         else
           false
@@ -227,8 +227,8 @@ module PermissionHelper
 
   def is_technician_or_higher_of_project(project)
     @user_project.technician? or
-      @user_project.normal_user? or
-      @user_project.owner?
+        @user_project.normal_user? or
+        @user_project.owner?
   end
 
   def is_viewer_of_project(project)
@@ -265,8 +265,8 @@ module PermissionHelper
   # a project is public/visible, and user is a member of that team
   def can_view_project(project)
     is_admin_of_team(project.team) ||
-      is_member_of_project(project) ||
-      (project.visible? and is_member_of_team(project.team))
+        is_member_of_project(project) ||
+        (project.visible? and is_member_of_team(project.team))
   end
 
   def can_view_project_activities(project)
@@ -315,18 +315,18 @@ module PermissionHelper
 
   def can_edit_project_comment(comment)
     comment.project.present? &&
-      (
+        (
         comment.user == current_user ||
-        is_owner_of_project(comment.project)
-      )
+            is_owner_of_project(comment.project)
+        )
   end
 
   def can_delete_project_comment(comment)
     comment.project.present? &&
-      (
+        (
         comment.user == current_user ||
-        is_owner_of_project(comment.project)
-      )
+            is_owner_of_project(comment.project)
+        )
   end
 
   def can_restore_archived_modules(project)
@@ -357,7 +357,7 @@ module PermissionHelper
 
   def can_view_experiment_actions(experiment)
     can_edit_experiment(experiment) ||
-      can_archive_experiment(experiment)
+        can_archive_experiment(experiment)
   end
 
   def can_create_experiment(project)
@@ -390,13 +390,14 @@ module PermissionHelper
 
   def can_clone_experiment(experiment)
     is_user_or_higher_of_project(experiment.project) &&
-      is_normal_user_or_admin_of_team(experiment.project.team)
+        is_normal_user_or_admin_of_team(experiment.project.team)
   end
 
   def can_move_experiment(experiment)
     is_user_or_higher_of_project(experiment.project) &&
-      is_normal_user_or_admin_of_team(experiment.project.team)
+        is_normal_user_or_admin_of_team(experiment.project.team)
   end
+
   # ---- WORKFLOW PERMISSIONS ----
 
   def can_edit_canvas(experiment)
@@ -451,7 +452,7 @@ module PermissionHelper
 
   def can_restore_module(my_module)
     my_module.archived? &&
-      is_user_or_higher_of_project(my_module.experiment.project)
+        is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_edit_tags_for_module(my_module)
@@ -504,27 +505,27 @@ module PermissionHelper
 
   def can_edit_module_comment(comment)
     comment.my_module.present? &&
-      (
+        (
         comment.user == current_user ||
-        is_owner_of_project(
-          comment.my_module.experiment.project
+            is_owner_of_project(
+                comment.my_module.experiment.project
+            )
         )
-      )
   end
 
   def can_delete_module_comment(comment)
     comment.my_module.present? &&
-      (
+        (
         comment.user == current_user ||
-        is_owner_of_project(
-          comment.my_module.experiment.project
+            is_owner_of_project(
+                comment.my_module.experiment.project
+            )
         )
-      )
   end
 
   def can_view_module_samples(my_module)
     can_view_module(my_module) and
-      can_view_samples(my_module.experiment.project.team)
+        can_view_samples(my_module.experiment.project.team)
   end
 
   def can_view_module_archive(my_module)
@@ -543,7 +544,7 @@ module PermissionHelper
 
   def can_view_or_download_result_assets(my_module)
     is_member_of_project(my_module.experiment.project) ||
-      can_view_project(my_module.experiment.project)
+        can_view_project(my_module.experiment.project)
   end
 
   def can_view_result_comments(my_module)
@@ -556,27 +557,28 @@ module PermissionHelper
 
   def can_edit_result_comment_in_module(comment)
     comment.result.present? &&
-      (
+        (
         comment.user == current_user ||
-        is_owner_of_project(
-          comment.result.my_module.experiment.project
+            is_owner_of_project(
+                comment.result.my_module.experiment.project
+            )
         )
-      )
   end
 
   def can_delete_result_comment_in_module(comment)
     comment.result.present? &&
-      (
+        (
         comment.user == current_user ||
-        is_owner_of_project(
-          comment.result.my_module.experiment.project
+            is_owner_of_project(
+                comment.result.my_module.experiment.project
+            )
         )
-      )
   end
 
   def can_delete_module_result(result)
     is_owner_of_project(result.my_module.experiment.project)
   end
+
   # ---- RESULT TEXT PERMISSIONS ----
 
   def can_create_result_text_in_module(my_module)
@@ -647,7 +649,7 @@ module PermissionHelper
   # or team admin can edit it
   def can_edit_sample(sample)
     is_admin_of_team(sample.team) or
-      sample.user == current_user
+        sample.user == current_user
   end
 
   # Only person who created sample can delete it
@@ -687,12 +689,12 @@ module PermissionHelper
 
   def can_edit_custom_field(custom_field)
     custom_field.user == current_user ||
-      is_admin_of_team(custom_field.team)
+        is_admin_of_team(custom_field.team)
   end
 
   def can_delete_custom_field(custom_field)
     custom_field.user == current_user ||
-      is_admin_of_team(custom_field.team)
+        is_admin_of_team(custom_field.team)
   end
 
   # ---- PROTOCOL PERMISSIONS ----
@@ -714,13 +716,13 @@ module PermissionHelper
       is_member_of_team(protocol.team)
     elsif protocol.in_repository_private? or protocol.in_repository_archived?
       is_member_of_team(protocol.team) and
-        protocol.added_by == current_user
+          protocol.added_by == current_user
     elsif protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        can_view_module(my_module) &&
-        my_module.experiment.active?
+          my_module.experiment.project.active? &&
+          can_view_module(my_module) &&
+          my_module.experiment.active?
     else
       false
     end
@@ -728,51 +730,51 @@ module PermissionHelper
 
   def can_edit_protocol(protocol)
     is_normal_user_or_admin_of_team(protocol.team) and
-    current_user == protocol.added_by and (not protocol.in_repository_archived?)
+        current_user == protocol.added_by and (not protocol.in_repository_archived?)
   end
 
   def can_clone_protocol(protocol)
     is_normal_user_or_admin_of_team(protocol.team) and
-    (
-      protocol.in_repository_public? or
-      (protocol.in_repository_private? and current_user == protocol.added_by)
-    )
+        (
+        protocol.in_repository_public? or
+            (protocol.in_repository_private? and current_user == protocol.added_by)
+        )
   end
 
   def can_make_protocol_private(protocol)
     protocol.added_by == current_user and
-    protocol.in_repository_public?
+        protocol.in_repository_public?
   end
 
   def can_publish_protocol(protocol)
     protocol.added_by == current_user and
-    protocol.in_repository_private?
+        protocol.in_repository_private?
   end
 
   def can_export_protocol(protocol)
     (protocol.in_repository_public? and is_member_of_team(protocol.team)) or
-      (protocol.in_repository_private? and protocol.added_by == current_user) or
-      (protocol.in_module? and
-        can_export_protocol_from_module(protocol.my_module))
+        (protocol.in_repository_private? and protocol.added_by == current_user) or
+        (protocol.in_module? and
+            can_export_protocol_from_module(protocol.my_module))
   end
 
   def can_archive_protocol(protocol)
     protocol.added_by == current_user and
-      (protocol.in_repository_public? or protocol.in_repository_private?)
+        (protocol.in_repository_public? or protocol.in_repository_private?)
   end
 
   def can_restore_protocol(protocol)
     protocol.added_by == current_user and
-      protocol.in_repository_archived?
+        protocol.in_repository_archived?
   end
 
   def can_unlink_protocol(protocol)
     if protocol.linked?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        my_module.experiment.active?
+          my_module.experiment.project.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project) &&
+          my_module.experiment.active?
     else
       false
     end
@@ -782,9 +784,9 @@ module PermissionHelper
     if protocol.linked?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        my_module.experiment.active?
+          my_module.experiment.project.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project) &&
+          my_module.experiment.active?
     else
       false
     end
@@ -794,9 +796,9 @@ module PermissionHelper
     if protocol.linked?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        my_module.experiment.active?
+          my_module.experiment.project.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project) &&
+          my_module.experiment.active?
     else
       false
     end
@@ -806,9 +808,9 @@ module PermissionHelper
     if can_view_protocol(source)
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        my_module.experiment.active?
+          my_module.experiment.project.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project) &&
+          my_module.experiment.active?
     else
       false
     end
@@ -820,12 +822,12 @@ module PermissionHelper
       parent = protocol.parent
 
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_normal_user_or_admin_of_team(parent.team) &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        (parent.in_repository_public? or parent.in_repository_private?) &&
-        parent.added_by == current_user
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_normal_user_or_admin_of_team(parent.team) &&
+          is_user_or_higher_of_project(my_module.experiment.project) &&
+          (parent.in_repository_public? or parent.in_repository_private?) &&
+          parent.added_by == current_user
     else
       false
     end
@@ -847,16 +849,16 @@ module PermissionHelper
 
   def can_link_copied_protocol_in_repository(protocol)
     can_copy_protocol_to_repository(protocol.my_module) and
-      is_user_or_higher_of_project(protocol.my_module.experiment.project)
+        is_user_or_higher_of_project(protocol.my_module.experiment.project)
   end
 
   def can_view_steps_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        can_view_module(my_module)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          can_view_module(my_module)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_view_protocol(protocol)
     else
@@ -868,9 +870,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-      my_module.experiment.project.active? &&
-      my_module.experiment.active? &&
-      is_user_or_higher_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
@@ -882,9 +884,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
@@ -902,9 +904,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-      my_module.experiment.project.active? &&
-      my_module.experiment.active? &&
-      is_user_or_higher_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
@@ -916,9 +918,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_owner_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_owner_of_project(my_module.experiment.project)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
@@ -930,9 +932,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        can_view_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          can_view_project(my_module.experiment.project)
     else
       # In repository, comments are disabled
       false
@@ -943,9 +945,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_technician_or_higher_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_technician_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot complete steps
       false
@@ -958,9 +960,9 @@ module PermissionHelper
     protocol = comment.step.protocol
     if protocol.in_module?
       comment.user == current_user ||
-        is_owner_of_project(
-          protocol.my_module.experiment.project
-        )
+          is_owner_of_project(
+              protocol.my_module.experiment.project
+          )
     else
       false
     end
@@ -972,9 +974,9 @@ module PermissionHelper
     protocol = comment.step.protocol
     if protocol.in_module?
       comment.user == current_user ||
-        is_owner_of_project(
-          protocol.my_module.experiment.project
-        )
+          is_owner_of_project(
+              protocol.my_module.experiment.project
+          )
     else
       false
     end
@@ -984,10 +986,10 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        (is_member_of_project(my_module.experiment.project) ||
-          can_view_project(my_module.experiment.project))
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          (is_member_of_project(my_module.experiment.project) ||
+              can_view_project(my_module.experiment.project))
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_view_protocol(protocol)
     else
@@ -999,9 +1001,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_technician_or_higher_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_technician_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot complete steps
       false
@@ -1012,9 +1014,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-      my_module.experiment.project.active? &&
-      my_module.experiment.active? &&
-      is_user_or_higher_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot complete steps
       false
@@ -1025,9 +1027,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_technician_or_higher_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_technician_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot check checkboxes
       false
@@ -1038,9 +1040,9 @@ module PermissionHelper
     if protocol.in_module?
       my_module = protocol.my_module
       my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project)
+          my_module.experiment.project.active? &&
+          my_module.experiment.active? &&
+          is_user_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot check checkboxes
       false
@@ -1055,7 +1057,7 @@ module PermissionHelper
 
   def can_create_repository(team)
     is_admin_of_team(team) &&
-      team.repositories.count < Constants::REPOSITORIES_LIMIT
+        team.repositories.count < Constants::REPOSITORIES_LIMIT
   end
 
   def can_view_repository(repository)
@@ -1076,12 +1078,12 @@ module PermissionHelper
 
   def can_delete_column_in_repository(column)
     column.created_by == current_user ||
-      is_admin_of_team(column.repository.team)
+        is_admin_of_team(column.repository.team)
   end
 
   def can_edit_column_in_repository(column)
     column.created_by == current_user ||
-      is_admin_of_team(column.repository.team)
+        is_admin_of_team(column.repository.team)
   end
 
   def can_create_repository_records(repository)
@@ -1103,16 +1105,32 @@ module PermissionHelper
   def can_delete_repository_record(record)
     team = record.repository.team
     is_admin_of_team(team) || (is_normal_user_of_team(team) &&
-                               record.created_by == current_user)
+        record.created_by == current_user)
   end
 
   def can_assign_repository_records(my_module, repository)
     can_delete_repository_records(repository) &&
-      is_technician_or_higher_of_project(my_module.experiment.project)
+        is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_unassign_repository_records(my_module, repository)
     can_delete_repository_records(repository) &&
-      is_technician_or_higher_of_project(my_module.experiment.project)
+        is_technician_or_higher_of_project(my_module.experiment.project)
+  end
+
+  def can_create_new_btc_timestamp(project)
+    can_create_new_report(project)
+  end
+
+  def can_view_btc_timestamps(project)
+    can_view_project(project)
+  end
+
+  def can_delete_btc_timestamps(project)
+    can_create_new_report(project)
+  end
+
+  def can_download_btc_timestamp_file(project)
+    can_view_project(project)
   end
 end

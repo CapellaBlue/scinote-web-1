@@ -53,3 +53,15 @@ rubocop_cache
 
 # Ignore ESLint local instalation
 node_modules
+
+# Ignore DB_Store
+.DS_Store
+
+# ignore ItelliJ projects
+.idea*
+
+# Ignore sublime projects
+.sublime
+
+# Ignore Dev Upload directory
+timestamps/

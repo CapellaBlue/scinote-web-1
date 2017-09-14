@@ -103,6 +103,7 @@ en:
       samples: "Samples"
       activities: "Activity"
       reports: "Reports"
+      timestamps: "BTC Timestamps"
       archive: "Archive"
     experiments:
       canvas: "Overview"
@@ -264,6 +265,37 @@ en:
       page_title: "Project's experiments"
     samples:
       head_title: "%{project} | Sample library"
+    btc_timestamps:
+      head_title: "%{project} | BTC Timestamps"
+      print_title: "%{project} | BTC Timestamps"
+      index:
+        head_title: "%{project} | BTC Timestamps"
+        new: "Save and timestamp"
+        create_sucess: "Timestamp sucessfully created! Go to BTC timestamps in project view."
+        create_fail: "Something went wrong, timestamp was not created. Try again."
+        delete: "Delete timestamp/s"
+        no_timestamps: "No timestamps!"
+        timestamp_label: "Label"
+        sha256: "SHA 256 value"
+        timestamp_created_at: "Created at"
+        timestamp_created_by: "Created by"
+        download_pdf: "Download PDF"
+        btc_status: "Status"
+        originstamp_information: "OriginStamp is a Trusted Timestamping Service based on Bitcoin Blockchain. Click logo for more information."
+        modal_delete:
+          head_title: "Delete timestamps/s"
+          message: "Are you sure to delete selected timestamps/s? Timestamps with PDF will be removed from Server. NOTE: Hashes in Bitcoin Blockchain cannot be deleted!"
+          delete: "Delete"
+    experiment_archive:
+      head_title: "%{project} | Archived experiments"
+      no_archived_experiments: "No archived experiments!"
+      restore_option: "Restore"
+      archived_on: "Archived on"
+      created_on: "Created on"
+      last_modified_on: "Last modified on"
+      archived_on_title: "Experiment archived on %{date} at %{time}."
+      created_on_title: "Experiment created on %{date} at %{time}."
+      last_modified_on_title: "Experiment last modified on %{date} at %{time}."
     reports:
       print_title: "%{project} | Report"
       index:
@@ -1208,6 +1240,8 @@ en:
     create_report: "<i>%{user}</i> created report <strong>%{report}</strong>."
     delete_report: "<i>%{user}</i> deleted report <strong>%{report}</strong>."
     edit_report: "<i>%{user}</i> edited report <strong>%{report}</strong>."
+    create_btc_timestamp: "<i>%{user}</i> created BTC timestamp <strong>%{btc_timestamp}</strong>."
+    delete_btc_timestamp: "<i>%{user}</i> deleted BTC timestamp <strong>%{btc_timestamp}</strong>."
 
   user_my_modules:
     new:

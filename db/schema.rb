@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170515141252) do
+ActiveRecord::Schema.define(version: 20170823141131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,18 @@ ActiveRecord::Schema.define(version: 20170515141252) do
   add_index "assets", ["created_by_id"], name: "index_assets_on_created_by_id", using: :btree
   add_index "assets", ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id", using: :btree
   add_index "assets", ["team_id"], name: "index_assets_on_team_id", using: :btree
+
+  create_table "btc_timestamps", force: :cascade do |t|
+    t.string   "sha256",     null: false
+    t.string   "file_uuid",  null: false
+    t.integer  "project_id", null: false
+    t.integer  "user_id",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "btc_timestamps", ["project_id"], name: "index_btc_timestamps_on_project_id", using: :btree
+  add_index "btc_timestamps", ["user_id"], name: "index_btc_timestamps_on_user_id", using: :btree
 
   create_table "checklist_items", force: :cascade do |t|
     t.string   "text",                                null: false
@@ -413,7 +425,6 @@ ActiveRecord::Schema.define(version: 20170515141252) do
     t.datetime "updated_at"
   end
 
-  add_index "repository_rows", ["name"], name: "index_repository_rows_on_name", using: :btree
   add_index "repository_rows", ["repository_id"], name: "index_repository_rows_on_repository_id", using: :btree
 
   create_table "repository_table_states", force: :cascade do |t|
@@ -544,11 +555,11 @@ ActiveRecord::Schema.define(version: 20170515141252) do
   add_index "samples", ["user_id"], name: "index_samples_on_user_id", using: :btree
 
   create_table "samples_tables", force: :cascade do |t|
-    t.jsonb    "status",     default: {"time"=>0, "order"=>[[2, "desc"]], "start"=>0, "length"=>10, "search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "columns"=>[{"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}], "ColReorder"=>[0, 1, 2, 3, 4, 5, 6]}, null: false
-    t.integer  "user_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   null: false
-    t.integer  "team_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   null: false
-    t.datetime "created_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                null: false
-    t.datetime "updated_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                null: false
+    t.jsonb    "status",     default: {"time"=>0, "order"=>[[2, "desc"]], "start"=>0, "length"=>10, "search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "columns"=>[{"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}], "assigned"=>"all", "ColReorder"=>[0, 1, 2, 3, 4, 5, 6]}, null: false
+    t.integer  "user_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      null: false
+    t.integer  "team_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      null: false
+    t.datetime "created_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   null: false
+    t.datetime "updated_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   null: false
   end
 
   add_index "samples_tables", ["team_id"], name: "index_samples_tables_on_team_id", using: :btree
@@ -814,6 +825,8 @@ ActiveRecord::Schema.define(version: 20170515141252) do
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
+  add_foreign_key "btc_timestamps", "projects"
+  add_foreign_key "btc_timestamps", "users"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"

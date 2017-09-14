@@ -5,7 +5,6 @@ class CreateProjects < ActiveRecord::Migration
       t.column :visibility, :integer, null: false, default: 0
       t.datetime :due_date
       t.integer :team_id, null: false
-
       t.timestamps null: false
     end
     add_foreign_key :projects, :teams

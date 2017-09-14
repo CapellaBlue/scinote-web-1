@@ -111,6 +111,12 @@
   }
 }
 
+.timestamp-table {
+  table-layout: auto;
+  border-collapse: collapse;
+  width: 100%;
+}
+
 #samples .dropdown-menu {
   float: none;
   position: relative;

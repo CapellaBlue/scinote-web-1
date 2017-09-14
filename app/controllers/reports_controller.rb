@@ -1,51 +1,55 @@
+UPLOAD_DIR = 'timestamps'.freeze
+OS_API_KEY = '2e13775d-4a1b-40b2-80d8-c9061de8bb39'.freeze
+OS_BASE_URL = 'https://api.originstamp.org/api/'.freeze
+
 class ReportsController < ApplicationController
   include TeamsHelper
   include ReportActions
   # Ignore CSRF protection just for PDF generation (because it's
   # used via target='_blank')
-  protect_from_forgery with: :exception, except: :generate
+  protect_from_forgery with: :exception, except: [:generate, :btc_timestamp], prepend: true
 
   before_action :load_vars, only: [
-    :edit,
-    :update
+      :edit,
+      :update
   ]
   before_action :load_vars_nested, only: [
-    :index,
-    :new,
-    :create,
-    :edit,
-    :update,
-    :generate,
-    :destroy,
-    :save_modal,
-    :project_contents_modal,
-    :experiment_contents_modal,
-    :module_contents_modal,
-    :step_contents_modal,
-    :result_contents_modal,
-    :project_contents,
-    :module_contents,
-    :step_contents,
-    :result_contents
+      :index,
+      :new,
+      :create,
+      :edit,
+      :update,
+      :generate,
+      :destroy,
+      :save_modal,
+      :project_contents_modal,
+      :experiment_contents_modal,
+      :module_contents_modal,
+      :step_contents_modal,
+      :result_contents_modal,
+      :project_contents,
+      :module_contents,
+      :step_contents,
+      :result_contents
   ]
 
   before_action :check_view_permissions, only: :index
   before_action :check_create_permissions, only: [
-    :new,
-    :create,
-    :edit,
-    :update,
-    :generate,
-    :save_modal,
-    :project_contents_modal,
-    :experiment_contents_modal,
-    :module_contents_modal,
-    :step_contents_modal,
-    :result_contents_modal,
-    :project_contents,
-    :module_contents,
-    :step_contents,
-    :result_contents
+      :new,
+      :create,
+      :edit,
+      :update,
+      :generate,
+      :save_modal,
+      :project_contents_modal,
+      :experiment_contents_modal,
+      :module_contents_modal,
+      :step_contents_modal,
+      :result_contents_modal,
+      :project_contents,
+      :module_contents,
+      :step_contents,
+      :result_contents
   ]
   before_action :check_destroy_permissions, only: :destroy
 
@@ -77,18 +81,18 @@ class ReportsController < ApplicationController
     if continue && @report.save_with_contents(report_contents)
       # record an activity
       Activity.create(
-        type_of: :create_report,
-        project: @report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.create_report',
-          user: current_user.full_name,
-          report: @report.name
-        )
+          type_of: :create_report,
+          project: @report.project,
+          user: current_user,
+          message: I18n.t(
+              'activities.create_report',
+              user: current_user.full_name,
+              report: @report.name
+          )
       )
       respond_to do |format|
         format.json do
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: {url: project_reports_path(@project)}, status: :ok
         end
       end
     else
@@ -122,18 +126,18 @@ class ReportsController < ApplicationController
     if continue && @report.save_with_contents(report_contents)
       # record an activity
       Activity.create(
-        type_of: :edit_report,
-        project: @report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.edit_report',
-          user: current_user.full_name,
-          report: @report.name
-        )
+          type_of: :edit_report,
+          project: @report.project,
+          user: current_user,
+          message: I18n.t(
+              'activities.edit_report',
+              user: current_user.full_name,
+              report: @report.name
+          )
       )
       respond_to do |format|
         format.json do
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: {url: project_reports_path(@project)}, status: :ok
         end
       end
     else
@@ -158,14 +162,14 @@ class ReportsController < ApplicationController
       next unless report.present?
       # record an activity
       Activity.create(
-        type_of: :delete_report,
-        project: report.project,
-        user: current_user,
-        message: I18n.t(
-          'activities.delete_report',
-          user: current_user.full_name,
-          report: report.name
-        )
+          type_of: :delete_report,
+          project: report.project,
+          user: current_user,
+          message: I18n.t(
+              'activities.delete_report',
+              user: current_user.full_name,
+              report: report.name
+          )
       )
       report.destroy
     end
@@ -181,10 +185,64 @@ class ReportsController < ApplicationController
         @html = params[:html]
         @html = '<h1>No content</h1>' if @html.blank?
         render pdf: 'report',
-          header: { right: '[page] of [topage]' },
-          template: 'reports/report.pdf.erb'
+               header: {right: '[page] of [topage]'},
+               template: 'reports/report.pdf.erb'
       end
     end
+  end
+
+  require 'net/http'
+  require 'securerandom'
+
+  def btc_timestamp
+    # TODO: If new proect, save and then redirect back with project id
+    project_id = params[:project_id]
+    user_id = current_user.id
+
+    @html = params[:html]
+    @html = '<h1>No content</h1>' if @html.blank?
+
+    file_uuid = String(SecureRandom.uuid)
+    file_name = file_uuid + '.pdf'
+    render pdf: 'report',
+           header: {right: '[page] of [topage]'},
+           template: 'reports/report.pdf.erb',
+           save_to_file: Rails.root.join(UPLOAD_DIR, file_name),
+           save_only: true
+    db_entry = BtcTimestamp.new
+
+    db_entry.create(File.join(UPLOAD_DIR, file_name), project_id, file_uuid, user_id)
+
+    # Send hash string to Originstamp
+    url = URI(OS_BASE_URL + db_entry.sha256)
+
+    req = Net::HTTP::Get.new(url.path)
+    req['Authorization'] = OS_API_KEY
+
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+
+    res = https.request(req)
+
+    if res.code == '200'
+      flash[:success] = t("projects.btc_timestamps.index.create_sucess")
+    else
+      flash[:error] = t("projects.btc_timestamps.index.create_fail")
+    end
+
+    # project = Project.find_by_id(project_id)
+    Activity.create(
+        type_of: :create_btc_timestamp,
+        project: db_entry.project,
+        user: current_user,
+        message: I18n.t(
+            'activities.create_btc_timestamp',
+            user: current_user.full_name,
+            btc_timestamp: db_entry.sha256
+        )
+    )
+
+    redirect_to :back
   end
 
   # Modal for saving the existsing/new report
@@ -209,9 +267,9 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(
-            partial: 'reports/new/modal/save.html.erb'
-          )
+            html: render_to_string(
+                partial: 'reports/new/modal/save.html.erb'
+            )
         }
       end
     end
@@ -222,10 +280,10 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(
-            partial: 'reports/new/modal/project_contents.html.erb',
-            locals: { project: @project }
-          )
+            html: render_to_string(
+                partial: 'reports/new/modal/project_contents.html.erb',
+                locals: {project: @project}
+            )
         }
       end
     end
@@ -243,10 +301,10 @@ class ReportsController < ApplicationController
       else
         format.json do
           render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/experiment_contents.html.erb',
-              locals: { project: @project, experiment: experiment }
-            )
+              html: render_to_string(
+                  partial: 'reports/new/modal/experiment_contents.html.erb',
+                  locals: {project: @project, experiment: experiment}
+              )
           }
         end
       end
@@ -265,10 +323,10 @@ class ReportsController < ApplicationController
       else
         format.json do
           render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/module_contents.html.erb',
-              locals: { project: @project, my_module: my_module }
-            )
+              html: render_to_string(
+                  partial: 'reports/new/modal/module_contents.html.erb',
+                  locals: {project: @project, my_module: my_module}
+              )
           }
         end
       end
@@ -287,10 +345,10 @@ class ReportsController < ApplicationController
       else
         format.json do
           render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/step_contents.html.erb',
-              locals: { project: @project, step: step }
-            )
+              html: render_to_string(
+                  partial: 'reports/new/modal/step_contents.html.erb',
+                  locals: {project: @project, step: step}
+              )
           }
         end
       end
@@ -309,10 +367,10 @@ class ReportsController < ApplicationController
       else
         format.json do
           render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/result_contents.html.erb',
-              locals: { project: @project, result: result }
-            )
+              html: render_to_string(
+                  partial: 'reports/new/modal/result_contents.html.erb',
+                  locals: {project: @project, result: result}
+              )
           }
         end
       end
@@ -324,12 +382,12 @@ class ReportsController < ApplicationController
       elements = generate_project_contents_json
 
       if elements_empty? elements
-        format.json { render json: {}, status: :no_content }
+        format.json {render json: {}, status: :no_content}
       else
         format.json {
           render json: {
-            status: :ok,
-            elements: elements
+              status: :ok,
+              elements: elements
           }
         }
       end
@@ -338,26 +396,26 @@ class ReportsController < ApplicationController
 
   def experiment_contents
     experiment = Experiment.find_by_id(params[:id])
-    modules = (params[:modules].select { |_, p| p == "1" })
-              .keys
-              .collect(&:to_i)
+    modules = (params[:modules].select {|_, p| p == "1"})
+                  .keys
+                  .collect(&:to_i)
 
     respond_to do |format|
       if experiment.blank?
-        format.json { render json: {}, status: :not_found }
+        format.json {render json: {}, status: :not_found}
       elsif modules.blank?
-        format.json { render json: {}, status: :no_content }
+        format.json {render json: {}, status: :no_content}
       else
         elements = generate_experiment_contents_json(experiment, modules)
       end
 
       if elements_empty? elements
-        format.json { render json: {}, status: :no_content }
+        format.json {render json: {}, status: :no_content}
       else
         format.json do
           render json: {
-            status: :ok,
-            elements: elements
+              status: :ok,
+              elements: elements
           }
         end
       end
@@ -369,17 +427,17 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       if my_module.blank?
-        format.json { render json: {}, status: :not_found }
+        format.json {render json: {}, status: :not_found}
       else
         elements = generate_module_contents_json(my_module)
 
         if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
+          format.json {render json: {}, status: :no_content}
         else
           format.json do
             render json: {
-              status: :ok,
-              elements: elements
+                status: :ok,
+                elements: elements
             }
           end
         end
@@ -392,17 +450,17 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       if step.blank?
-        format.json { render json: {}, status: :not_found }
+        format.json {render json: {}, status: :not_found}
       else
         elements = generate_step_contents_json(step)
 
         if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
+          format.json {render json: {}, status: :no_content}
         else
           format.json {
             render json: {
-              status: :ok,
-              elements: elements
+                status: :ok,
+                elements: elements
             }
           }
         end
@@ -415,17 +473,17 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       if result.blank?
-        format.json { render json: {}, status: :not_found }
+        format.json {render json: {}, status: :not_found}
       else
         elements = generate_result_contents_json(result)
 
         if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
+          format.json {render json: {}, status: :no_content}
         else
           format.json {
             render json: {
-              status: :ok,
-              elements: elements
+                status: :ok,
+                elements: elements
             }
           }
         end
@@ -460,6 +518,6 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report)
-          .permit(:name, :description, :grouped_by, :report_contents)
+        .permit(:name, :description, :grouped_by, :report_contents)
   end
 end

@@ -34,6 +34,8 @@ var ignoreUnsavedWorkAlert;
    initializeSidebarNavigation();
    initializeUnsavedWorkDialog();
    initTutorial();
+   initializeSaveReportBeforeTimestamping();
+   initializeExportPdfForBTCTimestamp();
 
    $('.report-nav-link').each(function() {
      truncateLongString($(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
@@ -430,6 +432,114 @@ function initializePrintPopup() {
     );
     print_window.document.close();
   });
+}
+
+/**
+ * Save report before a timestamp is created
+ */
+function initializeSaveReportBeforeTimestamping() {
+    var dh = $("#data-holder");
+    var saveReportLink = $("#get-btc-timestamp-pdf");
+
+    saveReportModal = $("#save-report-modal");
+    saveReportModalBody = saveReportModal.find(".modal-body");
+
+    var modalContentsUrl = dh.data("save-report-url");
+
+    var reportId = dh.data("report-id");
+
+    // Remove "save report" modal content when modal
+    // window is closed
+    saveReportModal.on("hidden.bs.modal", function () {
+        saveReportModalBody.html("");
+    });
+
+    saveReportLink.click(function (e) {
+        // Send AJAX request to retrieve the modal contents
+        $.ajax({
+            url: modalContentsUrl,
+            type: "POST",
+            global: false,
+            dataType: "json",
+            data: {
+                id: reportId,
+                contents: JSON.stringify(constructReportContentsJson())
+            },
+            success: function (data, status, jqxhr) {
+                // Display module contents
+                saveReportModalBody.html(data.html);
+
+                // Bind to the ajax events of the modal form in its body
+                $(SAVE_REPORT_FORM_ID)
+                    .on("ajax:beforeSend", function () {
+                        animateSpinner(this);
+                    })
+                    .on("ajax:success", function (e, xhr, opts, data) {
+                        if (data.status == 200) {
+                            // Redirect back to index
+
+                            // Turn off all hooks related to alert window
+                            ignoreUnsavedWorkAlert = true;
+                            $(window).off('beforeunload');
+                            $(document).off('page:before-change');
+
+                            $(location).attr("href", xhr.url);
+                        }
+                    })
+                    .on("ajax:error", function (e, xhr, settings, error) {
+                        // Display errors
+                        if (xhr.status == 422) {
+                            $(this).renderFormErrors("report", xhr.responseJSON);
+                        } else {
+                            // TODO
+                        }
+                    })
+                    .on("ajax:complete", function () {
+                        animateSpinner(this, false);
+                    });
+
+                // Finally, show the modal
+                saveReportModal.modal("show");
+            },
+            error: function (jqxhr, status, error) {
+                // TODO
+            }
+        });
+    });
+
+    // Bind click action of "save" button in modal footer to
+    // submit the form in the modal body
+    saveReportModal.find(".modal-footer button[data-action='save']")
+        .click(function (e) {
+            $(SAVE_REPORT_FORM_ID).submit();
+        });
+}
+
+/**
+ * Initialize PDF export for BTC timestamping.
+ */
+function initializeExportPdfForBTCTimestamp() {
+    var saveToPdfForm = $(".save-and-create-btc-timestamp-form");
+    var hiddenInput = saveToPdfForm.find("input[type='hidden']");
+    var saveToPdfBtn = saveToPdfForm.find("#get-btc-timestamp-pdf");
+
+    saveToPdfBtn.click(function(e) {
+        var content = $(REPORT_CONTENT);
+
+        // Fill hidden input element
+        hiddenInput.attr("value", content.html());
+
+        // Fire form submission
+        saveToPdfForm.submit();
+
+        // Clear form
+        hiddenInput.attr("value", "");
+
+        // Prevent page reload
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    });
 }
 
 /**
