@@ -195,7 +195,7 @@ class ReportsController < ApplicationController
   require 'securerandom'
 
   def btc_timestamp
-    # TODO: If new proect, save and then redirect back with project id
+
     project_id = params[:project_id]
     user_id = current_user.id
 
@@ -242,7 +242,7 @@ class ReportsController < ApplicationController
         )
     )
 
-    redirect_to :back
+    redirect_to project_report_url
   end
 
   # Modal for saving the existsing/new report

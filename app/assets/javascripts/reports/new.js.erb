@@ -34,8 +34,8 @@ var ignoreUnsavedWorkAlert;
    initializeSidebarNavigation();
    initializeUnsavedWorkDialog();
    initTutorial();
-   initializeSaveReportBeforeTimestamping();
-   initializeExportPdfForBTCTimestamp();
+   initializeSaveAndTimestampReport();
+   // initializeExportPdfForBTCTimestamp();
 
    $('.report-nav-link').each(function() {
      truncateLongString($(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
@@ -437,11 +437,14 @@ function initializePrintPopup() {
 /**
  * Save report before a timestamp is created
  */
-function initializeSaveReportBeforeTimestamping() {
+function initializeSaveAndTimestampReport() {
     var dh = $("#data-holder");
     var saveReportLink = $("#get-btc-timestamp-pdf");
 
-    saveReportModal = $("#save-report-modal");
+    var saveToPdfForm = $(".save-and-create-btc-timestamp-form");
+    var hiddenInput = saveToPdfForm.find("input[type='hidden']");
+
+    saveReportModal = $("#save-and-timestamp-report-modal");
     saveReportModalBody = saveReportModal.find(".modal-body");
 
     var modalContentsUrl = dh.data("save-report-url");
@@ -475,6 +478,7 @@ function initializeSaveReportBeforeTimestamping() {
                         animateSpinner(this);
                     })
                     .on("ajax:success", function (e, xhr, opts, data) {
+                        console.debug(xhr, data);
                         if (data.status == 200) {
                             // Redirect back to index
 
@@ -487,6 +491,7 @@ function initializeSaveReportBeforeTimestamping() {
                         }
                     })
                     .on("ajax:error", function (e, xhr, settings, error) {
+                        console.debug(xhr);
                         // Display errors
                         if (xhr.status == 422) {
                             $(this).renderFormErrors("report", xhr.responseJSON);
@@ -512,6 +517,13 @@ function initializeSaveReportBeforeTimestamping() {
     saveReportModal.find(".modal-footer button[data-action='save']")
         .click(function (e) {
             $(SAVE_REPORT_FORM_ID).submit();
+            var content = $(REPORT_CONTENT);
+            hiddenInput.attr("value", content.html());
+            ignoreUnsavedWorkAlert = true;
+            $(window).off('beforeunload');
+            $(document).off('page:before-change');
+            saveToPdfForm.submit();
+            hiddenInput.attr("value", "");
         });
 }
 
@@ -525,6 +537,10 @@ function initializeExportPdfForBTCTimestamp() {
 
     saveToPdfBtn.click(function(e) {
         var content = $(REPORT_CONTENT);
+
+        ignoreUnsavedWorkAlert = true;
+        $(window).off('beforeunload');
+        $(document).off('page:before-change');
 
         // Fill hidden input element
         hiddenInput.attr("value", content.html());

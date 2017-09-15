@@ -1,13 +1,8 @@
 (function () {
 
   var newReportModal = null;
-  var newReportModalBody = null;
-  var newReportCreateButton = null;
-
   var deleteReportsModal = null;
   var deleteReportsInput = null;
-
-  var newReportButton = null;
   var editReportButton = null;
   var deleteReportsButton = null;
   var checkAll = null;
@@ -22,11 +17,8 @@
   function init() {
     // Initialize selectors
     newReportModal = $('#new-report-modal');
-    newReportModalBody = newReportModal.find('.modal-body');
-    newReportCreateButton = $('#create-new-report-btn');
     deleteReportsModal = $('#delete-reports-modal');
     deleteReportsInput = $('#report-ids');
-    newReportButton = $('#new-report-btn');
     editReportButton = $('#edit-report-btn');
     deleteReportsButton = $('#delete-reports-btn');
     checkAll = $('.check-all-reports');
