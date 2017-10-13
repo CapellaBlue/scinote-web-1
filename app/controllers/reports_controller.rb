@@ -242,7 +242,7 @@ class ReportsController < ApplicationController
         )
     )
 
-    redirect_to project_reports_path(@project)
+    redirect_to project_reports_path(@project, :project_id => project_id)
   end
 
   # Modal for saving the existsing/new report
