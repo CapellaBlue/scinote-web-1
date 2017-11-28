@@ -99,7 +99,7 @@
               </a>
             </li>
           <% end %>
-            <% if can_view_btc_timestamps(@project) then %>
+            <% if can_view_timestamped_reports(@project) then %>
                 <li id="reports-nav-tab" class="<%= "active" if is_project_btc_timestamps? %>">
                   <a href="<%= project_btc_timestamps_url(@project) %>" title="<%=t "nav2.projects.timestamps" %>">
                     <span class="hidden-sm hidden-md"><%=t "nav2.projects.timestamps" %></span>

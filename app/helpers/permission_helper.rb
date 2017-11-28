@@ -64,7 +64,6 @@ module PermissionHelper
                :can_edit_connections,
                :can_create_modules,
                :can_edit_modules,
-               :can_edit_module_groups,
                :can_clone_modules,
                :can_archive_modules,
                :can_view_reports,
@@ -72,35 +71,6 @@ module PermissionHelper
                :can_delete_reports,
                :can_create_experiment
            ] do |proxy, *args, &block|
-      :can_view_project,
-      :can_view_project_activities,
-      :can_view_project_users,
-      :can_view_project_notifications,
-      :can_view_project_comments,
-      :can_edit_project,
-      :can_archive_project,
-      :can_add_user_to_project,
-      :can_remove_user_from_project,
-      :can_edit_users_on_project,
-      :can_add_comment_to_project,
-      :can_restore_archived_modules,
-      :can_view_project_samples,
-      :can_view_project_archive,
-      :can_create_new_tag,
-      :can_edit_tag,
-      :can_delete_tag,
-      :can_edit_canvas,
-      :can_reposition_modules,
-      :can_edit_connections,
-      :can_create_modules,
-      :can_edit_modules,
-      :can_clone_modules,
-      :can_archive_modules,
-      :can_view_reports,
-      :can_create_new_report,
-      :can_delete_reports,
-      :can_create_experiment
-    ] do |proxy, *args, &block|
       if args[0]
         project = args[0]
         project.active? ? proxy.call(*args, &block) : false
@@ -178,25 +148,9 @@ module PermissionHelper
                :can_edit_connections,
                :can_create_modules,
                :can_edit_modules,
-               :can_edit_module_groups,
                :can_clone_modules,
                :can_archive_modules
            ] do |proxy, *args, &block|
-      :can_edit_experiment,
-      :can_view_experiment,
-      :can_view_experiment_archive,
-      :can_archive_experiment,
-      :can_view_experiment_samples,
-      :can_clone_experiment,
-      :can_move_experiment,
-      :can_edit_canvas,
-      :can_reposition_modules,
-      :can_edit_connections,
-      :can_create_modules,
-      :can_edit_modules,
-      :can_clone_modules,
-      :can_archive_modules
-    ] do |proxy, *args, &block|
       if args[0]
         experiment = args[0]
         if experiment.active? &&
@@ -441,7 +395,6 @@ module PermissionHelper
     is_user_or_higher_of_project(experiment.project) &&
         is_normal_user_or_admin_of_team(experiment.project.team)
   end
-
   # ---- WORKFLOW PERMISSIONS ----
 
   def can_edit_canvas(experiment)
@@ -618,7 +571,6 @@ module PermissionHelper
   def can_delete_module_result(result)
     is_owner_of_project(result.my_module.experiment.project)
   end
-
   # ---- RESULT TEXT PERMISSIONS ----
 
   def can_create_result_text_in_module(my_module)
@@ -1089,6 +1041,15 @@ module PermissionHelper
     end
   end
 
+  # ---- TTIMESTAMPED REPORTS PERMISSIONS ----
+
+  def can_view_timestamped_reports(project)
+    can_view_project(project)
+  end
+
+
+  # ----
+
   # ---- REPOSITORIES PERMISSIONS ----
 
   def can_view_team_repositories(team)
@@ -1158,19 +1119,4 @@ module PermissionHelper
         is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
-  def can_create_new_btc_timestamp(project)
-    can_create_new_report(project)
-  end
-
-  def can_view_btc_timestamps(project)
-    can_view_project(project)
-  end
-
-  def can_delete_btc_timestamps(project)
-    can_create_new_report(project)
-  end
-
-  def can_download_btc_timestamp_file(project)
-    can_view_project(project)
-  end
 end

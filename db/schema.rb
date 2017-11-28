@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20170823141131) do
-=======
-ActiveRecord::Schema.define(version: 20170619125051) do
->>>>>>> bb8aef3b73f916b094396c4216fd03fa64597bea
+ActiveRecord::Schema.define(version: 20171005135350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,6 +131,9 @@ ActiveRecord::Schema.define(version: 20170619125051) do
     t.integer "output_id", null: false
   end
 
+  add_index "connections", ["input_id"], name: "index_connections_on_input_id", using: :btree
+  add_index "connections", ["output_id"], name: "index_connections_on_output_id", using: :btree
+
   create_table "custom_fields", force: :cascade do |t|
     t.string   "name",                null: false
     t.integer  "user_id",             null: false
@@ -192,7 +191,6 @@ ActiveRecord::Schema.define(version: 20170619125051) do
   add_index "experiments", ["restored_by_id"], name: "index_experiments_on_restored_by_id", using: :btree
 
   create_table "my_module_groups", force: :cascade do |t|
-    t.string   "name",                      null: false
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.integer  "created_by_id"
@@ -525,6 +523,7 @@ ActiveRecord::Schema.define(version: 20170619125051) do
   end
 
   add_index "sample_my_modules", ["assigned_by_id"], name: "index_sample_my_modules_on_assigned_by_id", using: :btree
+  add_index "sample_my_modules", ["my_module_id"], name: "index_sample_my_modules_on_my_module_id", using: :btree
   add_index "sample_my_modules", ["sample_id", "my_module_id"], name: "index_sample_my_modules_on_sample_id_and_my_module_id", using: :btree
 
   create_table "sample_types", force: :cascade do |t|

@@ -1235,7 +1235,7 @@ en:
     delete_report: "<i>%{user}</i> deleted report <strong>%{report}</strong>."
     edit_report: "<i>%{user}</i> edited report <strong>%{report}</strong>."
     create_btc_timestamp: "<i>%{user}</i> created BTC timestamp <strong>%{btc_timestamp}</strong>."
-    delete_btc_timestamp: "<i>%{user}</i> deleted BTC timestamp <strong>%{btc_timestamp}</strong>."
+    btc_timestamp_creation_failed: "<i>%{user}</i>BTC timestamp creation <strong>%{btc_timestamp} failed</strong>."
 
   user_my_modules:
     new:

@@ -185,14 +185,9 @@ class ReportsController < ApplicationController
         @html = params[:html]
         @html = '<h1>No content</h1>' if @html.blank?
         render pdf: 'report',
-<<<<<<< HEAD
-               header: {right: '[page] of [topage]'},
-               template: 'reports/report.pdf.erb'
-=======
           header: { right: '[page] of [topage]' },
           template: 'reports/report.pdf.erb',
           disable_javascript: true
->>>>>>> bb8aef3b73f916b094396c4216fd03fa64597bea
       end
     end
   end
@@ -231,24 +226,32 @@ class ReportsController < ApplicationController
     res = https.request(req)
 
     if res.code == '200'
-      flash[:success] = t("projects.btc_timestamps.index.create_sucess")
+      Activity.create(
+          type_of: :create_btc_timestamp,
+          project: db_entry.project,
+          user: current_user,
+          message: I18n.t(
+              'activities.create_btc_timestamp',
+              user: current_user.full_name,
+              btc_timestamp: db_entry.sha256
+          )
+      )
     else
-      flash[:error] = t("projects.btc_timestamps.index.create_fail")
+      Activity.create(
+          type_of: :create_btc_timestamp,
+          project: db_entry.project,
+          user: current_user,
+          message: I18n.t(
+              'activities.btc_timestamp_creation_failed',
+              user: current_user.full_name,
+              btc_timestamp: db_entry.sha256
+          )
+      )
     end
 
-    # project = Project.find_by_id(project_id)
-    Activity.create(
-        type_of: :create_btc_timestamp,
-        project: db_entry.project,
-        user: current_user,
-        message: I18n.t(
-            'activities.create_btc_timestamp',
-            user: current_user.full_name,
-            btc_timestamp: db_entry.sha256
-        )
-    )
 
-    redirect_to project_reports_path(@project, :project_id => project_id)
+
+    redirect_to project_reports_path(@project, project_id: project_id)
   end
 
   # Modal for saving the existsing/new report
