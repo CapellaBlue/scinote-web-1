@@ -3,8 +3,7 @@ require 'digest'
 class BtcTimestamp < ActiveRecord::Base
   include SearchableModel
   validates :file_uuid, presence: true, uniqueness: true
-  validates :sha256, presence: true, uniqueness: true
-  validates :sha256, length: {is: 64}
+  validates :sha256, presence: true, uniqueness: true, length: {is: 64}
 
   belongs_to :project, inverse_of: :btc_timestamps
   belongs_to :user, inverse_of: :btc_timestamps
