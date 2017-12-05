@@ -1,0 +1,3 @@
+
+class FileVersionsController < ApplicationController
+end

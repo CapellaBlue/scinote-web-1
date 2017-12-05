@@ -1,3 +1,5 @@
+# TODO: attach file to model
+# TODO: put constants in config
 UPLOAD_DIR = 'timestamps'.freeze
 OS_API_KEY = '2e13775d-4a1b-40b2-80d8-c9061de8bb39'.freeze
 OS_BASE_URL = 'https://api.originstamp.org/api/'.freeze

@@ -190,18 +190,16 @@ ActiveRecord::Schema.define(version: 20171130123043) do
   add_index "experiments", ["project_id"], name: "index_experiments_on_project_id", using: :btree
   add_index "experiments", ["restored_by_id"], name: "index_experiments_on_restored_by_id", using: :btree
 
-  create_table "file_uploads", force: :cascade do |t|
-    t.string  "sha256",        null: false
-    t.string  "file_uuid",     null: false
-    t.string  "file_name",     null: false
-    t.integer "project_id",    null: false
-    t.integer "experiment_id", null: false
-    t.integer "user_id",       null: false
+  create_table "file_versions", force: :cascade do |t|
+    t.string   "sha256",             null: false
+    t.string   "original_file_name", null: false
+    t.integer  "step_id",            null: false
+    t.integer  "user_id",            null: false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
   end
-
-  add_index "file_uploads", ["experiment_id"], name: "index_file_uploads_on_experiment_id", using: :btree
-  add_index "file_uploads", ["project_id"], name: "index_file_uploads_on_project_id", using: :btree
-  add_index "file_uploads", ["user_id"], name: "index_file_uploads_on_user_id", using: :btree
 
   create_table "my_module_groups", force: :cascade do |t|
     t.datetime "created_at",                null: false
@@ -860,9 +858,8 @@ ActiveRecord::Schema.define(version: 20171130123043) do
   add_foreign_key "experiments", "users", column: "created_by_id"
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "restored_by_id"
-  add_foreign_key "file_uploads", "experiments"
-  add_foreign_key "file_uploads", "projects"
-  add_foreign_key "file_uploads", "users"
+  add_foreign_key "file_versions", "steps"
+  add_foreign_key "file_versions", "users"
   add_foreign_key "my_module_groups", "experiments"
   add_foreign_key "my_module_groups", "users", column: "created_by_id"
   add_foreign_key "my_module_repository_rows", "users", column: "assigned_by_id"

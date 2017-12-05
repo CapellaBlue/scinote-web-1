@@ -15,6 +15,46 @@ class AssetsController < ApplicationController
   before_action :check_read_permission, except: [:signature, :file_present]
   before_action :check_edit_permission, only: :edit
 
+  after_action :save_file_version
+
+  def send_hash_to_originstamp_job(sha256)
+    # Send hash to OriginStamp
+    Rails.logger.info "File version: #{sha256}: OriginStamp submission started."
+    url = URI(OS_BASE_URL + sha256)
+
+    req = Net::HTTP::Get.new(url.path)
+    req['Authorization'] = OS_API_KEY
+
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+    res = https.request(req)
+    Rails.logger.info "File version: #{sha256} was submitted to OriginStamp with code: #{res.code}."
+  end
+
+  def save_file_version
+    # Save file versions of uploaded files in file_versions table together with file.
+    if @asset.nil?
+      return
+    end
+    if @asset.file.path.include? 'processing.gif'
+      return
+    end
+    step_id = @asset.step.id
+    user_id = @asset.created_by.id
+    file_version_entry = FileVersion.new
+    fetched_file = @asset.file.fetch
+    file_content = fetched_file.read
+    file_version_entry.create(@asset.file,
+                              file_content,
+                              step_id,
+                              user_id,
+                              @asset.file_file_name,
+                              @asset.file_file_size)
+
+    Rails.logger.info "Asset version: #{file_version_entry.sha256}: Creating submission job"
+    delay(queue: send_hash_to_originstamp_job(file_version_entry.sha256))
+  end
+
   # Validates asset and then generates S3 upload posts, because
   # otherwise untracked files could be uploaded to S3
   def signature

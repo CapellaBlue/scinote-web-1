@@ -1,3 +1,6 @@
+OS_API_KEY = '2e13775d-4a1b-40b2-80d8-c9061de8bb39'.freeze
+OS_BASE_URL = 'https://api.originstamp.org/api/'.freeze
+
 class StepsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
@@ -21,7 +24,7 @@ class StepsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'new.html.erb')
+            html: render_to_string(partial: 'new.html.erb')
         }
       end
     end
@@ -66,17 +69,17 @@ class StepsController < ApplicationController
         # Generate activity
         if @protocol.in_module?
           Activity.create(
-            type_of: :create_step,
-            user: current_user,
-            project: @my_module.experiment.project,
-            experiment: @my_module.experiment,
-            my_module: @my_module,
-            message: t(
-              "activities.create_step",
-              user: current_user.full_name,
-              step: @step.position + 1,
-              step_name: @step.name
-            )
+              type_of: :create_step,
+              user: current_user,
+              project: @my_module.experiment.project,
+              experiment: @my_module.experiment,
+              my_module: @my_module,
+              message: t(
+                  "activities.create_step",
+                  user: current_user.full_name,
+                  step: @step.position + 1,
+                  step_name: @step.name
+              )
           )
         else
           # TODO: Activity for team if step
@@ -88,17 +91,17 @@ class StepsController < ApplicationController
 
         format.json do
           render json: {
-            html: render_to_string(
-              partial: 'steps/step.html.erb',
-                       locals: { step: @step }
-            )
+              html: render_to_string(
+                  partial: 'steps/step.html.erb',
+                  locals: {step: @step}
+              )
           },
-          status: :ok
+                 status: :ok
         end
       else
         format.json {
           render json: {
-            html: render_to_string(partial: 'new.html.erb')
+              html: render_to_string(partial: 'new.html.erb')
           }, status: :bad_request
         }
       end
@@ -109,12 +112,12 @@ class StepsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(
-            partial: 'steps/step.html.erb',
-                     locals: { step: @step }
-          )
+            html: render_to_string(
+                partial: 'steps/step.html.erb',
+                locals: {step: @step}
+            )
         },
-        status: :ok
+               status: :ok
       end
     end
   end
@@ -124,9 +127,9 @@ class StepsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'edit.html.erb')
+            html: render_to_string(partial: 'edit.html.erb')
         },
-        status: :ok
+               status: :ok
       end
     end
   end
@@ -162,8 +165,8 @@ class StepsController < ApplicationController
 
       # gerate a tag that replaces img tag in databases
       @step.description = parse_tiny_mce_asset_to_token(
-        params[:step][:description],
-        @step
+          params[:step][:description],
+          @step
       )
 
       if @step.save
@@ -188,17 +191,17 @@ class StepsController < ApplicationController
         # Generate activity
         if @protocol.in_module?
           Activity.create(
-            type_of: :edit_step,
-            user: current_user,
-            project: @my_module.experiment.project,
-            experiment: @my_module.experiment,
-            my_module: @my_module,
-            message: t(
-              "activities.edit_step",
-              user: current_user.full_name,
-              step: @step.position + 1,
-              step_name: @step.name
-            )
+              type_of: :edit_step,
+              user: current_user,
+              project: @my_module.experiment.project,
+              experiment: @my_module.experiment,
+              my_module: @my_module,
+              message: t(
+                  "activities.edit_step",
+                  user: current_user.full_name,
+                  step: @step.position + 1,
+                  step_name: @step.name
+              )
           )
         else
           # TODO: Activity for team if step
@@ -210,10 +213,10 @@ class StepsController < ApplicationController
 
         format.json {
           render json: {
-            html: render_to_string({
-                partial: 'step.html.erb',
-                locals: { step:  @step }
-                })
+              html: render_to_string({
+                                         partial: 'step.html.erb',
+                                         locals: {step: @step}
+                                     })
           }
         }
       else
@@ -221,6 +224,7 @@ class StepsController < ApplicationController
           render json: @step.errors.to_json, status: :bad_request
         }
       end
+
     end
   end
 
@@ -247,13 +251,13 @@ class StepsController < ApplicationController
       update_protocol_ts(@step)
 
       flash[:success] = t(
-        'protocols.steps.destroy.success_flash',
-        step: (@step.position + 1).to_s
+          'protocols.steps.destroy.success_flash',
+          step: (@step.position + 1).to_s
       )
     else
       flash[:error] = t(
-        'protocols.steps.destroy.error_flash',
-        step: (@step.position + 1).to_s
+          'protocols.steps.destroy.error_flash',
+          step: (@step.position + 1).to_s
       )
     end
 
@@ -287,31 +291,31 @@ class StepsController < ApplicationController
             # Create activity
             if changed
               str = checked ? "activities.check_step_checklist_item" :
-                "activities.uncheck_step_checklist_item"
+                        "activities.uncheck_step_checklist_item"
               completed_items = chkItem.checklist.checklist_items.where(checked: true).count
               all_items = chkItem.checklist.checklist_items.count
               text_activity = smart_annotation_parser(chkItem.text)
-                              .gsub(/\s+/, ' ')
+                                  .gsub(/\s+/, ' ')
               message = t(
-                str,
-                user: current_user.full_name,
-                checkbox: text_activity,
-                step: chkItem.checklist.step.position + 1,
-                step_name: chkItem.checklist.step.name,
-                completed: completed_items,
-                all: all_items
+                  str,
+                  user: current_user.full_name,
+                  checkbox: text_activity,
+                  step: chkItem.checklist.step.position + 1,
+                  step_name: chkItem.checklist.step.name,
+                  completed: completed_items,
+                  all: all_items
               )
 
               # This should always hold true (only in module can
               # check items be checked, but still check just in case)
               if protocol.in_module?
                 Activity.create(
-                  user: current_user,
-                  project: protocol.my_module.experiment.project,
-                  experiment: protocol.my_module.experiment,
-                  my_module: protocol.my_module,
-                  message: message,
-                  type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
+                    user: current_user,
+                    project: protocol.my_module.experiment.project,
+                    experiment: protocol.my_module.experiment,
+                    my_module: protocol.my_module,
+                    message: message,
+                    type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
                 )
               end
             end
@@ -343,7 +347,7 @@ class StepsController < ApplicationController
         protocol = step.protocol
 
         authorized = (
-          (completed and can_complete_step_in_protocol(protocol)) ||
+        (completed and can_complete_step_in_protocol(protocol)) ||
             (!completed and can_uncomplete_step_in_protocol(protocol))
         )
 
@@ -369,12 +373,12 @@ class StepsController < ApplicationController
               str = 'activities.complete_step' if completed
 
               message = t(
-                str,
-                user: current_user.full_name,
-                step: step.position + 1,
-                step_name: step.name,
-                completed: completed_steps,
-                all: all_steps
+                  str,
+                  user: current_user.full_name,
+                  step: step.position + 1,
+                  step_name: step.name,
+                  completed: completed_steps,
+                  all: all_steps
               )
 
               # Toggling step state can only occur in
@@ -382,12 +386,12 @@ class StepsController < ApplicationController
               # not nil; nonetheless, check if my_module is present
               if protocol.in_module?
                 Activity.create(
-                  user: current_user,
-                  project: protocol.my_module.experiment.project,
-                  experiment: protocol.my_module.experiment,
-                  my_module: protocol.my_module,
-                  message: message,
-                  type_of: completed ? :complete_step : :uncomplete_step
+                    user: current_user,
+                    project: protocol.my_module.experiment.project,
+                    experiment: protocol.my_module.experiment,
+                    my_module: protocol.my_module,
+                    message: message,
+                    type_of: completed ? :complete_step : :uncomplete_step
                 )
               end
             end
@@ -401,11 +405,11 @@ class StepsController < ApplicationController
             format.json do
               if ready_to_complete && protocol.my_module.uncompleted?
                 render json: {
-                  task_ready_to_complete: true,
-                  new_title: localized_title
+                    task_ready_to_complete: true,
+                    new_title: localized_title
                 }, status: :ok
               else
-                render json: { new_title: localized_title }, status: :ok
+                render json: {new_title: localized_title}, status: :ok
               end
             end
           else
@@ -445,13 +449,13 @@ class StepsController < ApplicationController
               update_protocol_ts(step)
 
               format.json {
-                render json: { move_direction: "up", step_up_position: step.position, step_down_position: step_down.position },
-                status: :ok
+                render json: {move_direction: "up", step_up_position: step.position, step_down_position: step_down.position},
+                       status: :ok
               }
             else
               format.json {
-              render json: {}, status: :forbidden
-            }
+                render json: {}, status: :forbidden
+              }
             end
           else
             format.json {
@@ -460,8 +464,8 @@ class StepsController < ApplicationController
           end
         else
           format.json {
-              render json: {}, status: :forbidden
-            }
+            render json: {}, status: :forbidden
+          }
         end
       else
         format.json {
@@ -490,8 +494,8 @@ class StepsController < ApplicationController
               update_protocol_ts(step)
 
               format.json {
-                render json: { move_direction: "down", step_up_position: step_up.position, step_down_position: step.position },
-                status: :ok
+                render json: {move_direction: "down", step_up_position: step_up.position, step_down_position: step.position},
+                       status: :ok
               }
             else
               format.json {
@@ -584,12 +588,12 @@ class StepsController < ApplicationController
               if asset.try(&:locked?)
                 asset.errors.add(:base, 'This file is locked.')
               else
-                attr_params[pos] = { id: attrs[:id], _destroy: '1' }
+                attr_params[pos] = {id: attrs[:id], _destroy: '1'}
               end
             end
             params[key].delete(pos)
           elsif has_destroy_params(params[key][pos])
-            attr_params[pos] = { id: attrs[:id] }
+            attr_params[pos] = {id: attrs[:id]}
             extract_destroy_params(params[key][pos], attr_params[pos])
           end
         end
@@ -624,10 +628,10 @@ class StepsController < ApplicationController
 
   def convert_table_contents_to_utf8
     if params.include? :step and
-      params[:step].include? :tables_attributes then
-      params[:step][:tables_attributes].each do |k,v|
+        params[:step].include? :tables_attributes then
+      params[:step][:tables_attributes].each do |k, v|
         params[:step][:tables_attributes][k][:contents] =
-          v[:contents].encode(Encoding::UTF_8).force_encoding(Encoding::UTF_8)
+            v[:contents].encode(Encoding::UTF_8).force_encoding(Encoding::UTF_8)
       end
     end
   end
@@ -664,30 +668,30 @@ class StepsController < ApplicationController
 
   def step_params
     params.require(:step).permit(
-      :name,
-      :description,
-      checklists_attributes: [
-        :id,
         :name,
-        :_destroy,
-        checklist_items_attributes: [
-          :id,
-          :text,
-          :position,
-          :_destroy
+        :description,
+        checklists_attributes: [
+            :id,
+            :name,
+            :_destroy,
+            checklist_items_attributes: [
+                :id,
+                :text,
+                :position,
+                :_destroy
+            ]
+        ],
+        assets_attributes: [
+            :id,
+            :file,
+            :_destroy
+        ],
+        tables_attributes: [
+            :id,
+            :name,
+            :contents,
+            :_destroy
         ]
-      ],
-      assets_attributes: [
-        :id,
-        :file,
-        :_destroy
-      ],
-      tables_attributes: [
-        :id,
-        :name,
-        :contents,
-        :_destroy
-      ]
     )
   end
 end

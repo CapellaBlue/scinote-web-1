@@ -1,6 +1,7 @@
 require 'digest'
 
 class BtcTimestamp < ActiveRecord::Base
+  # TODO: Change the file saving, move to paperclip
   include SearchableModel
   validates :file_uuid, presence: true, uniqueness: true
   validates :sha256, presence: true, uniqueness: true, length: {is: 64}

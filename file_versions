@@ -1,0 +1,16 @@
+[INFO  - 2015-11-19T16:01:50.604Z] GhostDriver - Main - running on port 61026
+[INFO  - 2015-11-19T16:01:51.067Z] Session [d878f760-8ed6-11e5-8761-496f9fcbb7b9] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.0.0 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2015-11-19T16:01:51.068Z] Session [d878f760-8ed6-11e5-8761-496f9fcbb7b9] - page.customHeaders:  - {}
+[INFO  - 2015-11-19T16:01:51.068Z] Session [d878f760-8ed6-11e5-8761-496f9fcbb7b9] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.0.0","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"mac-10.9 (Mavericks)-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2015-11-19T16:01:51.068Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: d878f760-8ed6-11e5-8761-496f9fcbb7b9
+[ERROR - 2015-11-19T16:02:29.979Z] Session [d878f760-8ed6-11e5-8761-496f9fcbb7b9] - page.onError - msg: TypeError: undefined is not an object (evaluating 'a.URL')
+
+  :262 in error
+[ERROR - 2015-11-19T16:02:29.979Z] Session [d878f760-8ed6-11e5-8761-496f9fcbb7b9] - page.onError - stack:
+  Ib (https://pagead2.googlesyndication.com/pagead/osd.js:7)
+  Ca (https://pagead2.googlesyndication.com/pagead/osd.js:6)
+  (anonymous function) (https://pagead2.googlesyndication.com/pagead/osd.js:6)
+
+  :262 in error
+[INFO  - 2015-11-19T16:06:50.596Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2015-11-19T16:06:50.597Z] SessionManagerReqHand - _cleanupWindowlessSessions - Deleted Session 'd878f760-8ed6-11e5-8761-496f9fcbb7b9', because windowless

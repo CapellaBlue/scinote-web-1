@@ -1,3 +1,0 @@
-
-class FileUploadsController < ApplicationController
-end
