@@ -195,6 +195,8 @@ ActiveRecord::Schema.define(version: 20171130123043) do
     t.string   "original_file_name", null: false
     t.integer  "step_id",            null: false
     t.integer  "user_id",            null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
     t.string   "file_file_name"
     t.string   "file_content_type"
     t.integer  "file_file_size"

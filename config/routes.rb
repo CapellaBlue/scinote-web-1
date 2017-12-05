@@ -188,7 +188,6 @@ Rails.application.routes.draw do
       resources :btc_timestamps, path: '/btc_timestamps', only: [:index] do
         collection do
           get '/:uuid/download' => 'btc_timestamps#download'
-          post 'destroy', as: :destroy # Destroy multiple selected timestamps
         end
       end
       resources :reports,
@@ -480,6 +479,9 @@ Rails.application.routes.draw do
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
     post 'asset_signature' => 'assets#signature'
+
+    # Route for downloading file versions.
+    get 'file_versions/:id/download', to: 'file_versions#download', as: 'download_file_version'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'

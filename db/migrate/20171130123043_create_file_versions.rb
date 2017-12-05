@@ -5,7 +5,7 @@ class CreateFileVersions < ActiveRecord::Migration
       t.string :original_file_name, null: false
       t.integer :step_id, null: false
       t.integer :user_id, null: false
-      t.timestamp null: false
+      t.timestamps null: false
     end
     add_attachment :file_versions, :file
     add_foreign_key :file_versions, :steps

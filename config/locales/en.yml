@@ -1639,6 +1639,12 @@ en:
       no_description: "This step has no description."
       tables: "Tables"
       files: "Files"
+      file_versions: "File versions"
+      sha256: "SHA256"
+      file_name: "File name"
+      created_at: "Created at"
+      created_by: "Created by"
+      download_file: "Download version"
       empty_checklist: "No items"
       comment_title: "%{user} at %{time}:"
       options:

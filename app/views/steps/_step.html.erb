@@ -17,7 +17,7 @@
              href="<%= move_down_step_path(step, format: :json) %>"
              title="<%= t("protocols.steps.options.down_arrow_title") %>"
              data-remote="true">
-            <span class="glyphicon glyphicon-arrow-down"></a>
+            <span class="glyphicon glyphicon-arrow-down"></span></a>
         <% end %>
         <% if can_edit_step_in_protocol(@protocol) %>
           <a data-action="edit-step"
@@ -25,13 +25,13 @@
              title="<%= t("protocols.steps.options.edit_title") %>"
              href="<%= edit_step_path(step, format: :json) %>"
              data-remote="true">
-            <span class="glyphicon glyphicon-edit">
+            <span class="glyphicon glyphicon-edit"></span>
           </a>
         <% end %>
         <% if can_delete_step_in_protocol(@protocol) && step.can_destroy? %>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
-            <span class="glyphicon glyphicon-trash">
+                <span class="glyphicon glyphicon-trash"></span>
           <% end %>
         <% end %>
       </div>
@@ -131,7 +131,40 @@
               </ul>
             </div>
           <% end %>
+          <% if can_view_or_download_step_assets(@protocol) %>
+          <% if step.file_versions.count > 0 %>
+              <div class="col-xs-12">
+                <strong><%= t("protocols.steps.file_versions") %></strong>
+                <ul>
+                  <table class="table file_versions" data-step-id="<%= step.id %>" style="table-layout: fixed">
+                    <thead>
+                    <tr>
+                      <th><%=	t("protocols.steps.file_name") %></th>
+                      <th><%=	t("protocols.steps.sha256") %></th>
+                      <th><%=	t("protocols.steps.created_at") %></th>
+                      <th><%=	t("protocols.steps.created_by") %></th>
+                      <th><%=	t("protocols.steps.download_file") %></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                  <% step.file_versions.order(original_file_name: :asc).each do |version| %>
+                    <tr data-id="<%= version.id %>">
+                      <td><%=	version.original_file_name[0, 30] %></td>
+                      <td class="linktToOriginStamp"><span><a href="https://app.originstamp.org/s/<%= version.sha256 %>" target="_blank"><%= version.sha256[0, 12] %>...</a></span></td>
+                      <td><%=l version.created_at, format: :full %></td>
+                      <td><%= version.user.full_name %></td>
+                      <td>
+                        <%= link_to download_file_version_path(version),
+                         id: "#{version.id}" do %><span class="glyphicon glyphicon-download-alt"></span><% end %></td>
+                    </tr>
+                    <% end %>
+                    </tbody>
+                  </table>
 
+                </ul>
+              </div>
+          <% end %>
+          <% end %>
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
               <% step.checklists.asc.each do |checklist| %>
