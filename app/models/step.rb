@@ -34,6 +34,9 @@ class Step < ActiveRecord::Base
   accepts_nested_attributes_for :assets,
                                 reject_if: :all_blank,
                                 allow_destroy: true
+  accepts_nested_attributes_for :file_versions,
+                                reject_if: :all_blank,
+                                allow_destroy: true
   accepts_nested_attributes_for :tables,
                                 reject_if: proc { |attributes|
                                   attributes['contents'].blank?

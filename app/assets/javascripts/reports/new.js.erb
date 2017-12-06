@@ -185,7 +185,7 @@ function initializeNewElement(newEl) {
     var el = $(this);
     var dh = $("#data-holder");
     var parent = el.closest(".report-element");
-
+    console.debug(parent);
     var parentElementId;
     var url;
     var modalTitle;
@@ -1248,7 +1248,7 @@ function constructElementContentsJson(el) {
     });
   }
   jsonEl["children"] = jsonChildren;
-
+  console.debug(jsonEl);
   return jsonEl;
 }
 
@@ -1256,21 +1256,7 @@ function constructElementContentsJson(el) {
   * Binds listeners to sidebar
   * that truncate long strings
   */
-function initializeReportSidebartruncation() {
-  var target = document.getElementById("report-sidebar-tree");
-  var observer = new MutationObserver(
-    function() {
-      $.each($("a.report-nav-link"),
-               function(){
-                 truncateLongString($(this),
-                                    <%= Constants::NAME_TRUNCATION_LENGTH %>);
-               });
-    }
-  );
-  var config = { childList: true };
 
-  observer.observe(target, config);
-}
 
 /**
  * Initializes tutorial

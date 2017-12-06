@@ -19,6 +19,8 @@ class FileVersion < ActiveRecord::Base
   belongs_to :step, inverse_of: :file_versions
   belongs_to :user, inverse_of: :file_versions
 
+  has_many :report_elements, inverse_of: :file_version, dependent: :destroy
+
   def create(file, file_content, step_id, user_id, file_name, file_size)
     self.file = file
     self.sha256 = Digest::SHA256.hexdigest file_content

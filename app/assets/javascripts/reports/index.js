@@ -40,30 +40,30 @@
     // TEMPORARY DISABLED
     /**
     // Remove modal content when modal window is closed.
-    newReportModal.on("hidden.bs.modal", function () {
-      newReportModalBody.html("");
+    newReportModal.on('hidden.bs.modal', function () {
+      newReportModalBody.html(');
     });
 
     // Populate modal content when AJAX call is complete
     newReportButton
-    .on("ajax:before", function () {
+    .on('ajax:before', function () {
       newReportModal.modal('show');
     })
-    .on("ajax:success", function (e, data) {
+    .on('ajax:success', function (e, data) {
       newReportModalBody.html(data.html);
     });
 
     // Before redirecting, pass parameters
     newReportCreateButton.click(function(event){
-      var url = $(this).closest("form").attr("action");
+      var url = $(this).closest('form').attr('action');
 
       event.preventDefault();
 
       // Copy the GET params
-      var val = newReportModalBody.find(".btn-primary.active > input[type='radio']").attr("value");
-      url += "/" + val;
+      var val = newReportModalBody.find('.btn-primary.active > input[type='radio']').attr('value');
+      url += '/' + val;
 
-      $(location).attr("href", url);
+      $(location).attr('href', url);
       return false;
     });
     */
@@ -74,19 +74,19 @@
    */
   function initCheckboxesAndEditing() {
     checkAll.click(function() {
-      allChecks.prop("checked", this.checked);
+      allChecks.prop('checked', this.checked);
       checkedReports = [];
       if (this.checked) {
         _.each(allRows, function(row) {
-          checkedReports.push($(row).data("id"));
+          checkedReports.push($(row).data('id'));
         });
       }
 
       updateButtons();
     });
     allChecks.click(function() {
-      checkAll.prop("checked", false);
-      var id = $(this).closest(".report-row").data("id");
+      checkAll.prop('checked', false);
+      var id = $(this).closest('.report-row').data('id');
       if (this.checked) {
         if (_.indexOf(checkedReports, id) === -1) {
           checkedReports.push(id);
@@ -107,14 +107,14 @@
    */
   function updateButtons() {
     if (checkedReports.length === 0) {
-      editReportButton.addClass("disabled");
-      deleteReportsButton.addClass("disabled");
+      editReportButton.addClass('disabled');
+      deleteReportsButton.addClass('disabled');
     } else if (checkedReports.length === 1) {
-      editReportButton.removeClass("disabled");
-      deleteReportsButton.removeClass("disabled");
+      editReportButton.removeClass('disabled');
+      deleteReportsButton.removeClass('disabled');
     } else {
-      editReportButton.addClass("disabled");
-      deleteReportsButton.removeClass("disabled");
+      editReportButton.addClass('disabled');
+      deleteReportsButton.removeClass('disabled');
     }
   }
 
@@ -126,10 +126,10 @@
       animateLoading();
       if (checkedReports.length === 1) {
         var id = checkedReports[0];
-        var row = $(".report-row[data-id='" + id + "']");
-        var url = row.data("edit-link");
+        var row = $('.report-row[data-id=' + id + ']');
+        var url = row.data('edit-link');
 
-        $(location).attr("href", url);
+        $(location).attr('href', url);
       }
 
       return false;
@@ -143,14 +143,14 @@
     deleteReportsButton.click(function(e) {
       if (checkedReports.length > 0) {
         // Copy the checked IDs into the hidden input
-        deleteReportsInput.attr("value", "[" + checkedReports + "]");
+        deleteReportsInput.attr('value', '[' + checkedReports + ']');
 
         // Show modal
-        deleteReportsModal.modal("show");
+        deleteReportsModal.modal('show');
       }
     });
 
-    $("#confirm-delete-reports-btn").click(function(e) {
+    $('#confirm-delete-reports-btn').click(function(e) {
       animateLoading();
     });
   }

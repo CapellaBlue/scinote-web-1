@@ -58,6 +58,9 @@ class Report < ActiveRecord::Base
   # Save the JSON represented contents to this report
   # (this action will overwrite any existing report elements)
   def save_with_contents(json_contents)
+    puts "JSON file:"
+    puts json_contents
+    puts "The error happens here"
     begin
       Report.transaction do
         #First, save the report itself
@@ -72,6 +75,7 @@ class Report < ActiveRecord::Base
         end
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError
+      puts "Argument error..."
       return false
     end
     return true
@@ -89,12 +93,21 @@ class Report < ActiveRecord::Base
 
   # Recursively save a single JSON element
   def save_json_element(json_element, index, parent)
+    puts "save JSON element..."
     el = ReportElement.new
     el.position = index
+    puts "Index:"
+    puts index
     el.report = self
     el.parent = parent
+    puts "Parent:"
+    puts parent
     el.type_of = json_element['type_of']
+    puts "Type of:"
+    puts el.type_of
     el.sort_order = json_element['sort_order']
+    puts "Sort order:"
+    puts el.sort_order
     el.set_element_references(json_element['id'])
     el.save!
 

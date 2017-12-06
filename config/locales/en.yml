@@ -375,6 +375,8 @@ en:
             tables: "Tables"
             no_tables: "Step contains no tables"
             assets: "Files"
+            file_versions: "File versions"
+            no_file_versions: "Step contains no file versions"
             no_assets: "Step contains no uploaded files"
             checklists: "Checklists"
             no_checklists: "Step contains no checklists"

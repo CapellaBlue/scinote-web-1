@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171130123043) do
+ActiveRecord::Schema.define(version: 20171206164924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -345,9 +345,9 @@ ActiveRecord::Schema.define(version: 20171130123043) do
   add_index "protocols", ["team_id"], name: "index_protocols_on_team_id", using: :btree
 
   create_table "report_elements", force: :cascade do |t|
-    t.integer  "position",                  null: false
-    t.integer  "type_of",                   null: false
-    t.integer  "sort_order",    default: 0
+    t.integer  "position",                    null: false
+    t.integer  "type_of",                     null: false
+    t.integer  "sort_order",      default: 0
     t.integer  "report_id"
     t.integer  "parent_id"
     t.integer  "project_id"
@@ -357,15 +357,17 @@ ActiveRecord::Schema.define(version: 20171130123043) do
     t.integer  "checklist_id"
     t.integer  "asset_id"
     t.integer  "table_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.integer  "experiment_id"
     t.integer  "repository_id"
+    t.integer  "file_version_id",             null: false
   end
 
   add_index "report_elements", ["asset_id"], name: "index_report_elements_on_asset_id", using: :btree
   add_index "report_elements", ["checklist_id"], name: "index_report_elements_on_checklist_id", using: :btree
   add_index "report_elements", ["experiment_id"], name: "index_report_elements_on_experiment_id", using: :btree
+  add_index "report_elements", ["file_version_id"], name: "index_report_elements_on_file_version_id", using: :btree
   add_index "report_elements", ["my_module_id"], name: "index_report_elements_on_my_module_id", using: :btree
   add_index "report_elements", ["parent_id"], name: "index_report_elements_on_parent_id", using: :btree
   add_index "report_elements", ["project_id"], name: "index_report_elements_on_project_id", using: :btree
@@ -890,6 +892,7 @@ ActiveRecord::Schema.define(version: 20171130123043) do
   add_foreign_key "report_elements", "assets"
   add_foreign_key "report_elements", "checklists"
   add_foreign_key "report_elements", "experiments"
+  add_foreign_key "report_elements", "file_versions"
   add_foreign_key "report_elements", "my_modules"
   add_foreign_key "report_elements", "projects"
   add_foreign_key "report_elements", "reports"

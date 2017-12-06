@@ -27,6 +27,7 @@ class ReportElement < ActiveRecord::Base
   belongs_to :experiment, inverse_of: :report_elements
   belongs_to :my_module, inverse_of: :report_elements
   belongs_to :step, inverse_of: :report_elements
+  belongs_to :file_version, inverse_of: :report_elements
   belongs_to :result, inverse_of: :report_elements
   belongs_to :checklist, inverse_of: :report_elements
   belongs_to :asset, inverse_of: :report_elements
@@ -73,6 +74,7 @@ class ReportElement < ActiveRecord::Base
        experiment
        my_module
        step
+       file_versions
        result
        checklist
        asset

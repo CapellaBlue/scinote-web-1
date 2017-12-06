@@ -36,6 +36,18 @@
           </div>
         <% end %>
 
+        <%	if step_undefined or step.file_versions.exists? %>
+          <li>
+            <%=	form.check_box :file_versions, label: t("projects.reports.elements.modals.step_contents_inner.file_versions") %>
+          </li>
+        <% else %>
+            <div>
+              <em>
+                <%= t("projects.reports.elements.modals.step_contents_inner.no_file_versions") %>
+              </em>
+            </div>
+        <% end %>
+
         <% if step_undefined or step.tables.exists? %>
           <li>
             <%= form.check_box :step_tables, label: t("projects.reports.elements.modals.step_contents_inner.tables") %>
