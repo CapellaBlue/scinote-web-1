@@ -74,7 +74,7 @@ class ReportElement < ActiveRecord::Base
        experiment
        my_module
        step
-       file_versions
+       file_version
        result
        checklist
        asset

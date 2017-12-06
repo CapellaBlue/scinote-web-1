@@ -183,7 +183,7 @@ module ReportExtends
     ),
     ElementReference.new(proc(&:step_checklist?), ['checklist_id']),
     ElementReference.new(proc(&:step_asset?), ['asset_id']),
-    ElementReference.new(proc(&:step_file_version?), ['file_version_id']),
+    ElementReference.new(proc(&:file_version?), ['file_version_id']),
     ElementReference.new(proc(&:step_table?), ['table_id'])
   ]
 
@@ -230,7 +230,7 @@ module ReportExtends
     ),
     ElementReference.new(proc(&:step_checklist?), ['checklist_id']),
     ElementReference.new(proc(&:step_asset?), ['asset_id']),
-    ElementReference.new(proc(&:step_file_version?), ['file_version_id']),
+    ElementReference.new(proc(&:file_version?), ['file_version_id']),
     ElementReference.new(proc(&:step_table?), ['table_id'])
   ]
 end

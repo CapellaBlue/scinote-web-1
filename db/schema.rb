@@ -361,7 +361,7 @@ ActiveRecord::Schema.define(version: 20171206164924) do
     t.datetime "updated_at",                  null: false
     t.integer  "experiment_id"
     t.integer  "repository_id"
-    t.integer  "file_version_id",             null: false
+    t.integer  "file_version_id"
   end
 
   add_index "report_elements", ["asset_id"], name: "index_report_elements_on_asset_id", using: :btree

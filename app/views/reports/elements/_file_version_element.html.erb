@@ -1,10 +1,10 @@
-<% if version.blank? and @version.present? then version = @version end %>
+<% if file_version.blank? and @file_version.present? then file_version = @file_version end %>
 <% timestamp = Time.current + 1.year %>
 <div class="report-element report-file-version-element"
      data-ts="<%= timestamp.to_i %>"
-     data-type="step_file_version"
-     data-id='{ "file_version_id": <%= version.id %> }'
-     data-scroll-id="<%= version.id %>">
+     data-type="file_version"
+     data-id='{ "file_version_id": <%= file_version.id %> }'
+     data-scroll-id="<%= file_version.id %>">
 
   <div class="report-element-header">
     <div class="row">
@@ -15,12 +15,6 @@
   </div>
 
   <div class="report-element-body">
-    <div class="row">
-      <div class="pull-left file-version-name">
-        <strong><%= t("protocols.steps.file_versions") %></strong>
-      </div>
-    </div>
-
     <table style="table-layout: fixed">
       <thead>
       <tr>
@@ -32,10 +26,10 @@
       </thead>
       <tbody>
       <tr>
-        <td><%= version.original_file_name[0, 30] %></td>
-        <td><span><a href="https://app.originstamp.org/s/<%= version.sha256 %>" target="_blank"><%= version.sha256 %></a></span></td>
-        <td><%=l version.created_at, format: :full %></td>
-        <td><%= version.user.full_name %></td>
+        <td><%= file_version.original_file_name[0, 30] %></td>
+        <td><span><a href="https://app.originstamp.org/s/<%= file_version.sha256 %>" target="_blank"><%= file_version.sha256 %></a></span></td>
+        <td><%=l file_version.created_at, format: :full %></td>
+        <td><%= file_version.user.full_name %></td>
       </tr>
       </tbody>
     </table>

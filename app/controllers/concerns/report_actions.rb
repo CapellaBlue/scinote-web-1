@@ -148,8 +148,8 @@ module ReportActions
       step.file_versions.order(original_file_name: :asc).each do |version|
         res << generate_new_el(false)
         res << generate_el(
-            'reports/elements/step_file_versions_element.html.erb',
-            { version: version }
+            'reports/elements/file_version_element.html.erb',
+            { file_version: version }
         )
       end
     end
