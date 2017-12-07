@@ -2,7 +2,8 @@ require 'digest'
 # TODO: belongs_to result, so that results are covered, too.
 class FileVersion < ActiveRecord::Base
   include SearchableModel
-  has_attached_file :file, path: ":rails_root/file_versions"
+
+  has_attached_file :file, path: ':rails_root/file_versions'
   validates_attachment :file,
                        presence: true,
                        size: {

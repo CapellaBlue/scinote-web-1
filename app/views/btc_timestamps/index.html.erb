@@ -32,9 +32,8 @@
             <td><nobr><a href="https://app.originstamp.org/s/<%= btc.sha256 %>" target="_blank"><%= btc.sha256 %></a></nobr></td>
             <td><%=l btc.created_at, format: :full %></td>
             <td><%= btc.user.full_name %></td>
-            <td><a href="<%= project_btc_timestamps_path(@project) + '/' + btc.file_uuid + '/download' %>">
-              <span class="glyphicon glyphicon-download-alt"></span>
-            </a></td>
+            <td><a href="<%= project_btc_timestamps_path(@project) + '/' + btc.id.to_s + '/download' %>"><span class="glyphicon glyphicon-download-alt"></span></a>
+            </td>
           </tr>
         <% end %>
       <% else %>

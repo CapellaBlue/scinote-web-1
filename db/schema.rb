@@ -71,12 +71,16 @@ ActiveRecord::Schema.define(version: 20171206164924) do
   add_index "assets", ["team_id"], name: "index_assets_on_team_id", using: :btree
 
   create_table "btc_timestamps", force: :cascade do |t|
-    t.string   "sha256",     null: false
-    t.string   "file_uuid",  null: false
-    t.integer  "project_id", null: false
-    t.integer  "user_id",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "sha256",              null: false
+    t.string   "file_uuid",           null: false
+    t.integer  "project_id",          null: false
+    t.integer  "user_id",             null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.string   "report_file_name"
+    t.string   "report_content_type"
+    t.integer  "report_file_size"
+    t.datetime "report_updated_at"
   end
 
   add_index "btc_timestamps", ["project_id"], name: "index_btc_timestamps_on_project_id", using: :btree

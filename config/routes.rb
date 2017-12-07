@@ -187,7 +187,7 @@ Rails.application.routes.draw do
       # Timestamps via Bitcoin Blockchain
       resources :btc_timestamps, path: '/btc_timestamps', only: [:index] do
         collection do
-          get '/:uuid/download' => 'btc_timestamps#download'
+          get '/:id/download' => 'btc_timestamps#download', only: [:download]
         end
       end
       resources :reports,

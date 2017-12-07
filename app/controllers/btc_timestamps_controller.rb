@@ -1,9 +1,7 @@
-UPLOAD_DIR = 'timestamps'.freeze
-
 class BtcTimestampsController < ApplicationController
 
-  before_action :load_vars_nested
-
+  before_action :load_vars_nested, only: :index
+  before_action :load_vars, only: :download
   before_action :check_view_permissions, only: :index
 
   layout 'fluid'
@@ -13,17 +11,24 @@ class BtcTimestampsController < ApplicationController
   end
 
   def download
-    file_uuid = params[:uuid]
-    file_ext = '.pdf'
-    send_file(
-        UPLOAD_DIR + '/' + file_uuid + file_ext,
-        type: 'application/pdf'
-    )
+    if !@report_version
+      render_404 and return
+    elsif @report_version.report.is_stored_on_s3?
+      redirect_to @report_version.presigned_url(download: true), status: 307
+    else
+      send_file @report_version.report.path, filename: URI.unescape(@report_version.report_file_name + '.pdf'),
+                type: @report_version.report_content_type
+    end
   end
 
   def load_vars_nested
     @project = Project.find_by_id(params[:project_id])
     render_404 unless @project
+  end
+
+  def load_vars
+    @report_version = BtcTimestamp.find_by_id(params[:id])
+    render_404 unless @report_version
   end
 
   def check_view_permissions

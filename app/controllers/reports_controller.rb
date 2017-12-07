@@ -1,6 +1,6 @@
-# TODO: attach file to model
 # TODO: put constants in config
-UPLOAD_DIR = 'timestamps'.freeze
+require 'net/http'
+require 'securerandom'
 OS_API_KEY = '2e13775d-4a1b-40b2-80d8-c9061de8bb39'.freeze
 OS_BASE_URL = 'https://api.originstamp.org/api/'.freeze
 
@@ -187,15 +187,49 @@ class ReportsController < ApplicationController
         @html = params[:html]
         @html = '<h1>No content</h1>' if @html.blank?
         render pdf: 'report',
-          header: { right: '[page] of [topage]' },
-          template: 'reports/report.pdf.erb',
-          disable_javascript: true
+               header: {right: '[page] of [topage]'},
+               template: 'reports/report.pdf.erb',
+               disable_javascript: true
       end
     end
   end
 
-  require 'net/http'
-  require 'securerandom'
+  def send_hash_to_originstamp_job(sha256, user, project)
+    # Send hash to OriginStamp
+    Rails.logger.info "Report version: #{sha256}: OriginStamp submission started."
+    url = URI(OS_BASE_URL + sha256)
+
+    req = Net::HTTP::Get.new(url.path)
+    req['Authorization'] = OS_API_KEY
+
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+    res = https.request(req)
+    Rails.logger.info "Report version: #{sha256} was submitted to OriginStamp with code: #{res.code}."
+    if res.code == '200'
+      Activity.create(
+          type_of: :create_btc_timestamp,
+          project: project,
+          user: user,
+          message: I18n.t(
+              'activities.create_btc_timestamp',
+              user: current_user.full_name,
+              btc_timestamp: sha256
+          )
+      )
+    else
+      Activity.create(
+          type_of: :create_btc_timestamp,
+          project: project,
+          user: user,
+          message: I18n.t(
+              'activities.btc_timestamp_creation_failed',
+              user: current_user.full_name,
+              btc_timestamp: sha256
+          )
+      )
+    end
+  end
 
   def btc_timestamp
 
@@ -206,52 +240,18 @@ class ReportsController < ApplicationController
     @html = '<h1>No content</h1>' if @html.blank?
 
     file_uuid = String(SecureRandom.uuid)
-    file_name = file_uuid + '.pdf'
-    render pdf: 'report',
-           header: {right: '[page] of [topage]'},
-           template: 'reports/report.pdf.erb',
-           save_to_file: Rails.root.join(UPLOAD_DIR, file_name),
-           save_only: true
-    db_entry = BtcTimestamp.new
+    file_content = render_to_string pdf: 'report',
+                                    header: {right: '[page] of [topage]'},
+                                    template: 'reports/report.pdf.erb'
+    file_size = file_content.size
+    file = StringIO.new(file_content.to_s)
+    report_version_entry = BtcTimestamp.new
 
-    db_entry.create(File.join(UPLOAD_DIR, file_name), project_id, file_uuid, user_id)
+    report_version_entry.create(file, file_content, file_size, file_uuid, project_id, user_id)
 
     # Send hash string to Originstamp
-    url = URI(OS_BASE_URL + db_entry.sha256)
-
-    req = Net::HTTP::Get.new(url.path)
-    req['Authorization'] = OS_API_KEY
-
-    https = Net::HTTP.new(url.host, url.port)
-    https.use_ssl = true
-
-    res = https.request(req)
-
-    if res.code == '200'
-      Activity.create(
-          type_of: :create_btc_timestamp,
-          project: db_entry.project,
-          user: current_user,
-          message: I18n.t(
-              'activities.create_btc_timestamp',
-              user: current_user.full_name,
-              btc_timestamp: db_entry.sha256
-          )
-      )
-    else
-      Activity.create(
-          type_of: :create_btc_timestamp,
-          project: db_entry.project,
-          user: current_user,
-          message: I18n.t(
-              'activities.btc_timestamp_creation_failed',
-              user: current_user.full_name,
-              btc_timestamp: db_entry.sha256
-          )
-      )
-    end
-
-
+    Rails.logger.info "Report version: #{report_version_entry.sha256}: Creating submission job"
+    delay(queue: send_hash_to_originstamp_job(report_version_entry.sha256, current_user, report_version_entry.project))
 
     redirect_to project_reports_path(@project, project_id: project_id)
   end

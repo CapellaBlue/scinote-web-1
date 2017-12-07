@@ -7,6 +7,7 @@ class CreateBtcTimestamps < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.timestamps null: false
     end
+    add_attachment :btc_timestamps, :report
     add_foreign_key :btc_timestamps, :projects
     add_index :btc_timestamps, :project_id
     add_foreign_key :btc_timestamps, :users

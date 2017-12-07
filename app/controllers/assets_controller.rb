@@ -55,7 +55,7 @@ class AssetsController < ApplicationController
                               @asset.file_file_name,
                               @asset.file_file_size)
 
-    Rails.logger.info "Asset version: #{file_version_entry.sha256}: Creating submission job"
+    Rails.logger.info "File version: #{file_version_entry.sha256}: Creating submission job"
     delay(queue: send_hash_to_originstamp_job(file_version_entry.sha256))
   end
 
