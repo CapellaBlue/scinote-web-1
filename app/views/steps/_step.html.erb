@@ -132,37 +132,40 @@
             </div>
           <% end %>
           <% if can_view_or_download_step_assets(@protocol) %>
-          <% if step.file_versions.count > 0 %>
-              <div class="col-xs-12">
-                <strong><%= t("protocols.steps.file_versions") %></strong>
-                <ul>
-                  <table class="table file_versions" data-step-id="<%= step.id %>" style="table-layout: fixed">
-                    <thead>
-                    <tr>
-                      <th><%=	t("protocols.steps.file_name") %></th>
-                      <th><%=	t("protocols.steps.sha256") %></th>
-                      <th><%=	t("protocols.steps.created_at") %></th>
-                      <th><%=	t("protocols.steps.created_by") %></th>
-                      <th><%=	t("protocols.steps.download_file") %></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                  <% step.file_versions.order(original_file_name: :asc).each do |version| %>
-                    <tr data-id="<%= version.id %>">
-                      <td><%=	version.original_file_name[0, 30] %></td>
-                      <td class="linktToOriginStamp"><span><a href="https://app.originstamp.org/s/<%= version.sha256 %>" target="_blank"><%= version.sha256[0, 12] %>...</a></span></td>
-                      <td><%=l version.created_at, format: :full %></td>
-                      <td><%= version.user.full_name %></td>
-                      <td>
-                        <%= link_to download_file_version_path(version),
-                         id: "#{version.id}" do %><span class="glyphicon glyphicon-download-alt"></span><% end %></td>
-                    </tr>
-                    <% end %>
-                    </tbody>
-                  </table>
-
-                </ul>
-              </div>
+              <% if step.file_versions.count > 0 %>
+                  <div id="content">
+                    <div class="col-xs-12">
+                      <strong><%= t("protocols.steps.file_versions") %></strong>
+                        <table class="table file_versions" data-step-id="<%= step.id %>">
+                          <thead>
+                          <tr>
+                            <th><%= t("protocols.steps.file_name") %></th>
+                            <th><%= t("protocols.steps.sha256") %></th>
+                            <th><%= t("protocols.steps.created_at") %></th>
+                            <th><%= t("protocols.steps.created_by") %></th>
+                            <th><%= t("protocols.steps.download_file") %></th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <% step.file_versions.order(original_file_name: :asc).each do |version| %>
+                              <tr data-id="<%= version.id %>">
+                                <td><%= version.original_file_name[0, 30] %></td>
+                                <td class="linktToOriginStamp">
+                                  <span><a href="https://app.originstamp.org/s/<%= version.sha256 %>" target="_blank"><%= version.sha256[0, 12] %>
+                                    ...</a></span></td>
+                                <td><%= l version.created_at, format: :full %></td>
+                                <td><%= version.user.full_name %></td>
+                                <td>
+                                  <%= link_to download_file_version_path(version),
+                                              id: "#{version.id}" do %>
+                                      <span class="glyphicon glyphicon-download-alt"></span>
+                                  <% end %></td>
+                              </tr>
+                          <% end %>
+                          </tbody>
+                        </table>
+                    </div>
+                  </div>
           <% end %>
           <% end %>
           <% unless step.checklists.blank? then %>

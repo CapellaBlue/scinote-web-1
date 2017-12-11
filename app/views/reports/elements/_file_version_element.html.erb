@@ -15,7 +15,7 @@
   </div>
 
   <div class="report-element-body">
-    <table style="table-layout: fixed">
+    <table>
       <thead>
       <tr>
         <th><%= t("protocols.steps.file_name") %></th>
@@ -27,8 +27,10 @@
       <tbody>
       <tr>
         <td><%= file_version.original_file_name[0, 30] %></td>
-        <td><span><a href="https://app.originstamp.org/s/<%= file_version.sha256 %>" target="_blank"><%= file_version.sha256 %></a></span></td>
-        <td><%=l file_version.created_at, format: :full %></td>
+        <td>
+          <span><a href="https://app.originstamp.org/s/<%= file_version.sha256[0, 16] %>" target="_blank"><%= file_version.sha256 %></a></span>
+        </td>
+        <td><%= l file_version.created_at, format: :full %></td>
         <td><%= file_version.user.full_name %></td>
       </tr>
       </tbody>
